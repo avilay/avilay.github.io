@@ -1,0 +1,20 @@
+---
+layout: post
+title: Why I Left Microsoft
+date: '2013-10-23 02:19:00'
+tags:
+- from-wordpress
+---
+
+Let me preface this blog by saying that it is not about Microsoft bashing. To quote an oft-repeated (and infamous quote) - "I &nbsp;L O V E &nbsp;T H I S &nbsp; C O M P A N Y". For me job satisfaction means three things - (a) work that makes full use of my existing skills and competency; (b) place where I can constantly learn - from my peers, my day-to-day work, the industry, etc.; (c ) autonomy to chart my own course of action. My career as a Program Manager at Microsoft afforded me all three - albeit at varying degrees. Then one fine morning I walked into my manager's office and told him that I wanted to leave - to start my own company. After a prolonged period of retention attempts (where needless to say I didn't change my mind), it was official - I was leaving Microsoft after 7.5 years of a very fulfilling career. And with it went the nice pay check, the RSUs, the health benefits, etc.
+
+When my friends and family came to know about this decision, they would say with a knowing smile on their faces, "You must have something up your sleeve - do you already have funding? Is the product ready to be released?". Some other concerned friends asked me whether I was doing a startup for the right reasons. Apparently some right reasons are - wanting to change the world, scratch a personal itch. One wrong reason is - wanting to do a startup. This ushered in a period of severe self-doubt - none of these things were true for me. I did not have funding, heck I did not even have a product definition. And I sure am not the "change the world - lets put a dent in the universe" type.
+
+My reasons for doing a startup are pretty simple - more than a decade ago I read an article by Tim Berners Lee about Semantic Web Services that really inspired me. I sincerely believe that the promise of web services (a.k.a cloud computing) combined with statistical learning techniques (a.k.a machine learning) can really make that vision a reality. I wanted to contribute in my own small way to move that vision one step forward. And the thought of a tightly knit, lean team rapidly executing on this vision was very, very appealing.
+
+Obviously I sought a lot of advice from mentors and other senior people before I actually quit my job. One mentor advised me that I should quit once I had "f\*\*k you" &nbsp;money (enough money that I can walk away from any situation I don't like). My wife told me it was very bad advice because the actual amount depended on the individual - for some $50,000 would be enough, for some $10MM would not be enough. Some other senior people said the smart thing would be to work on my startup on nights and weekends while holding my day job. Most of these well-meaning folks assumed that "working" on my startup means building the software. Given my background, building software is the easy part. Finding the right product/market fit is the more difficult part. And for that I needed to talk to a bunch of potential customers, folks in the industry, etc. And of course none of the potential customers I wanted to talk to were available during nights and weekends :-) If I was to figure out the right product to build - I needed to spend a lot of time in the field talking to people. And it just is not possible to do that while holding down a "day" job. The next time I had an important meeting with a potential customer for my startup, and an important meeting with a partner team at Microsoft, which one was I going to choose? Regardless of my choice, I would be doing a disservice to both.
+
+There were only two options in front of me - either I focus all my energies on being the best possible Program Manager at Microsoft that I could be. Or I could try to beat the odds of creating a successful startup (according to popular Internet "statistics" 90% of startups fail) and create the most awesome product I could. There was no middle ground. At least not for me.
+
+I decided to jump in. Only time will tell if this was the right decision. All I know is that it "feels" right in my heart.
+
