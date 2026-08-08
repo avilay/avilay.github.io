@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>probability-module-3</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <style>
+    body {
+      max-width: 820px;
+      margin: 2rem auto;
+      padding: 0 1.25rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: #1a1a1a;
+    }
+    pre, code {
+      background: #f4f4f4;
+      border-radius: 4px;
+    }
+    pre {
+      padding: 0.75rem;
+      overflow-x: auto;
+    }
+    code {
+      padding: 0.15rem 0.35rem;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 0.5rem;
+    }
+    img {
+      max-width: 100%;
+    }
+    blockquote {
+      border-left: 3px solid #ddd;
+      margin-left: 0;
+      padding-left: 1rem;
+      color: #555;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">probability-module-3</h1>
+</header>
+<h1 id="conditional-probability-and-dependence">Conditional Probability
+and Dependence</h1>
+<h2 id="conditional-probability">Conditional Probability</h2>
+<p>So far a probability has been a number attached to an event,
+comprised of outcomes picked from the whole sample space <span
+class="math inline">\(\Omega\)</span>. But most questions I actually
+care about are not asked against the whole world — they are asked
+<em>after I already know something</em>. What is the probability that a
+request is slow, <strong>given</strong> that it is peak hour? What is
+the probability that a page is a real incident, <strong>given</strong>
+that it fired at all?</p>
+<p>Lets consider a simple discrete sample space with just three possible
+outcomes - <span class="math inline">\(\Omega = \{\omega_1, \omega_2,
+\omega_3\}\)</span>. Lets define two events <span
+class="math inline">\(A = \{\omega_1, \omega_2\}\)</span> and <span
+class="math inline">\(B = \{\omega_2, \omega_3\}\)</span>. We know that
+<span class="math inline">\(P(\Omega) = P(\{\omega_1, \omega_2,
+\omega_3\}) = 1\)</span>, and <span class="math inline">\(P(A) =
+P(\{\omega_1, \omega_2\})\)</span> and <span class="math inline">\(P(B)
+= P(\{\omega_2, \omega_3\})\)</span> have non-zero probabilities. Lets
+say we get some new information that event <span
+class="math inline">\(B\)</span> has happened, this means that either
+<span class="math inline">\(\omega_2\)</span> or <span
+class="math inline">\(\omega_3\)</span> has been realized. But once we
+know this, the sample space is no longer all of <span
+class="math inline">\(\Omega\)</span>, it is now <span
+class="math inline">\(B\)</span>. Strictly speaking I can still keep the
+sample space as <span class="math inline">\(\Omega\)</span> if I want,
+but its event space will have a bunch of <span
+class="math inline">\(0\)</span> probability events. The sure-thing is
+now <span class="math inline">\(B\)</span>. If we use <span
+class="math inline">\(P&#39;\)</span> to denote probability in this new
+post-<span class="math inline">\(B\)</span> world, then <span
+class="math inline">\(P&#39;(B) = 1\)</span>, i.e., <span
+class="math inline">\(P&#39;(\{\omega_2, \omega_3\}) = 1\)</span>. But
+what will be the new probabilities of the remaining events in the event
+space? To answer that, we need to realize that while we know that <span
+class="math inline">\(B\)</span> happened, we don’t know anything else
+about any of the other events, so their new probabilities w.r.t each
+other will still be the same as before, although their absolute values
+might be different. If I have any two events <span
+class="math inline">\(E_1\)</span> and <span
+class="math inline">\(E_2\)</span>, then - <span class="math display">\[
+\frac{P(E_1)}{P(E_2)} = \frac{P&#39;(E_1)}{P&#39;(E_2)}
+\]</span> If I multiply the old probabilities by some constant, I should
+be able to get the new probabilities. <span class="math display">\[
+cP(E_1) = P&#39;(E_1) \\
+cP(E_2) = P&#39;(E_2) \\
+\]</span> And what should this constant be? By the above logic I can say
+that <span class="math inline">\(cP(B) = P&#39;(B)\)</span>, but I
+already know that <span class="math inline">\(P&#39;(B) = 1\)</span>, so
+it follows that - <span class="math display">\[
+c = \frac{1}{P(B)}
+\]</span> Does this mean that I can take any event from the old space
+and divide its old probability by <span
+class="math inline">\(P(B)\)</span> to get its new post-B probability?
+Not quite. If I have an event <span class="math inline">\(E\)</span>
+comprised of bunch of outcomes, only the outcomes that overlap with
+<span class="math inline">\(B\)</span> will show up in the post-B world,
+i.e., <span class="math inline">\(E\)</span> in the post-B world is
+really <span class="math inline">\(E \cap B\)</span> from the old world,
+so its probabiity in the new world is given by - <span
+class="math display">\[
+P&#39;(E) = \frac{P(E \cap B)}{P(B)}
+\]</span> For events that don’t have any overlap with <span
+class="math inline">\(B\)</span>, the intersection will produce the
+<span class="math inline">\(\emptyset\)</span> whose probability is
+always <span class="math inline">\(0\)</span>. E.g., the probability of
+the singleton event <span class="math inline">\(\{\omega_1\}\)</span> in
+the new world will be - <span class="math display">\[
+P&#39;(\{\omega_1\}) = \frac{P(\{\omega_1\} \cap B)}{P(B)} = 0
+\]</span> On the other hand, the new probability of event <span
+class="math inline">\(A\)</span> will be - <span class="math display">\[
+P&#39;(A) = \frac{P(A \cap B)}{P(B)} = \frac{P(\{\omega_2\})}{P(B)}
+\]</span> So far we have been calling the post-B world’s probability
+measure as <span class="math inline">\(P&#39;\)</span>, but <span
+class="math inline">\(P&#39;(\cdot) = P(\cdot \mid B)\)</span>, which is
+the correct mathematical notation. And it follows all the three rules of
+a probability measure, especially the “sure thing” rule <span
+class="math inline">\(P(B \mid B) = 1\)</span>. With this new notation,
+read as “probability of A given B” - <span class="math display">\[
+P(A \mid B) = \frac{P(A \cap B)}{P(B)}
+\]</span></p>
+<p>This also gives us the familiar product rule - <span
+class="math display">\[
+P(A \cap B) = P(A \mid B) \; P(B) = P(B \mid A) \; P(A)
+\]</span> Concretely, for the die: <span class="math inline">\(P(X = 2
+\mid \text{even}) = P(\{2\} \cap \{2,4,6\}) / P(\{2,4,6\}) = (1/6)/(1/2)
+= 1/3\)</span>. Knowing the roll is even collapses six equally likely
+faces down to three, and <span class="math inline">\(2\)</span> is one
+of them.</p>
+<p>In the QPS experiment, lets say we have also been capturing the
+timestamp at the beginning of the 1-second window. We have two random
+variables - <span class="math inline">\(X\)</span> which measures the
+number of requests, and <span class="math inline">\(T\)</span> which
+measures the timestamp. With these two variables we can define two
+different events (from the same sample space):</p>
+<ul>
+<li><em>overloaded</em>: Windows when the server was overloaded, i.e.,
+<span class="math inline">\(\{\omega: X(\omega) &gt; K\}\)</span>, where
+<span class="math inline">\(K\)</span> is the saturation load for the
+web server.</li>
+<li><em>peak</em>: Windows that fall in the peak-hours band, i.e., in
+the 6 hour window between 10AM and 4PM, i.e., <span
+class="math inline">\(\{\omega: 10AM \le T(\omega) \le
+4PM\}\)</span>.</li>
+</ul>
+<p>Lets say we have a log of several full days’ traffic chopped up into
+1-second windows. I randomly sample a 1-second window from this log.
+Probability that the sampled window is in the peak band is <span
+class="math inline">\(P(\text{peak}) = \frac{6}{24} = 0.25\)</span>.
+Lets say that after counting all the overloaded windows, I determine
+that <span class="math inline">\(P(\text{overloaded}) = 0.2\)</span>.
+Now, if I select a peak window, what is the probability that it was
+overloaded? The question I am asking is - what is the value of <span
+class="math inline">\(P(\text{overloaded} \mid \text{peak})\)</span>?
+<span class="math display">\[
+P(\text{overloaded} \mid \text{peak}) = \frac{P(\text{overloaded} \cap
+\text{peak})}{P(\text{peak})}
+\]</span> Lets say empirically we calculate that <span
+class="math inline">\(P(\text{overloaded} \cap \text{peak}) =
+0.15\)</span>. <span class="math display">\[
+P(\text{overloaded} \mid \text{peak}) = \frac{P(\text{overloaded} \cap
+\text{peak})}{P(\text{peak})} = \frac{0.15}{0.25} = 0.6
+\]</span> So even though the probability of the sever getting overloaded
+is <span class="math inline">\(0.2\)</span>, the probability that it is
+overloaded during peak hours is 3X the overall rate!</p>
+<blockquote>
+<p>How did I choose the numbers 0.2 and 0.15? First off, <span
+class="math inline">\(P(\text{overloaded} \cap \text{peak}) \le
+P(\text{peak})\)</span> because <span
+class="math inline">\(\text{overloaded} \cap \text{peak} \subseteq
+\text{peak}\)</span>, so I have to choose some value less than <span
+class="math inline">\(0.25\)</span>. I arbitrarily chose <span
+class="math inline">\(0.15\)</span> to make the arithmetic neat. Next,
+by similar logic <span class="math inline">\(P(\text{overloaded}) \ge
+P(\text{overloaded} \cap \text{peak})\)</span>, so the lower bound is
+<span class="math inline">\(0.15\)</span>. Now <span
+class="math inline">\(P(\text{overloaded}) = P(\text{overloaded} \cap
+\text{peak}) + P(\text{overloaded} \cap \text{peak}^c)\)</span>. <span
+class="math inline">\(P(\text{overloaded} \cap \text{peak}^c) &lt;
+P(\text{peak}^c)\)</span>. <span class="math inline">\(P(\text{peak}^c)
+= 0.75\)</span>. So the upper bound of <span
+class="math inline">\(P(\text{overloaded}) = 0.15 + 0.75 = 0.9\)</span>.
+I chose <span class="math inline">\(0.2\)</span> as the number between
+<span class="math inline">\((0.15, 0.9)\)</span>.</p>
+<p>Further, I don’t actually use <span
+class="math inline">\(P(\text{overloaded}) = 0.2\)</span> anywhere in
+the calculations, it is just there to show the contrast with 0.6.</p>
+</blockquote>
+<h2 id="joint-marginal-and-conditional-distributions">Joint, Marginal,
+and Conditional Distributions</h2>
+<p>Lets remind ourselves that probability is defined for events, i.e., a
+set of outcomes, and it indicates the chance that any one of the
+outcomes in that set is actually realized. We already saw an example of
+<strong>joint probability</strong> - <span
+class="math inline">\(P(\text{overloaded} \cap \text{peak})\)</span>
+which was the probability of getting a window that was both in peak
+hours and had the server overloaded. Conceptually, this is nothing new.
+At the end of the day, we are still finding the probability of a set of
+outcomes. What makes this a “joint probability” is that the set was
+built by two intersecting events. Just like probability distributions,
+joint probability distributions for discrete spaces can be represented
+in a table. Continuing the example from above, we can build a full joint
+probability distribution of these two events:</p>
+<table>
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 22%" />
+<col style="width: 27%" />
+<col style="width: 19%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th><span class="math inline">\({\textbf{peak} \; \mathbf
+{P}}\)</span></th>
+<th><span class="math inline">\(\textbf{not peak} \; \mathbf {\neg
+P}\)</span></th>
+<th>Marginal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(\textbf{overloaded} \; \mathbf
+{O}\)</span></td>
+<td><span class="math inline">\(P(O \cap P) = 0.15\)</span></td>
+<td><span class="math inline">\(P(O \cap \neg P) = 0.05\)</span></td>
+<td><span class="math inline">\(\mathbf {P(O)= 0.20}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\textbf{not overloaded} \; \mathbf {\neg
+O}\)</span></td>
+<td><span class="math inline">\(P(\neg O \cap P) = 0.10\)</span></td>
+<td><span class="math inline">\(P(\neg O \cap \neg P) =
+0.70\)</span></td>
+<td><span class="math inline">\(\mathbf {P(\neg O) = 0.80}\)</span></td>
+</tr>
+<tr>
+<td><strong>Marginal</strong></td>
+<td><span class="math inline">\(\mathbf {P(P) = 0.25}\)</span></td>
+<td><span class="math inline">\(\mathbf {P(\neg P) = 0.75}\)</span></td>
+<td><span class="math inline">\(\mathbf {P(\Omega) = 1}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>The probability of a single event <span
+class="math inline">\(O\)</span> or <span
+class="math inline">\(P\)</span> is called the marginal probability
+because we can calculate these at the margins of the table. To get the
+probability of <span class="math inline">\(O\)</span> I just have to sum
+its row, i.e., I am summing over all disjoint <span
+class="math inline">\(P\)</span> events. In this case there are only two
+disjoint events - <span class="math inline">\(P\)</span> and <span
+class="math inline">\(\neg P\)</span>.</p>
+<p>Instead of working with events, we can also work with random
+variables, which as you may remember are simply a way to group outcomes
+into sets, i.e., they define a family of events. Consider the two random
+variables we defined earlier in Module 1, <span
+class="math inline">\(X\)</span> is the number of requests, and <span
+class="math inline">\(Y\)</span> is the number of sessions, which is
+calculated as the number of distinct client IPs in the 1-second window.
+We know that <span class="math inline">\(P(X = x)\)</span> is shortform
+for the more pedantic <span class="math inline">\(P(\{\omega: X(\omega)
+= x\})\)</span>. Similarly <span class="math inline">\(P(X = x, Y =
+y)\)</span> is the shortform for <span class="math inline">\(P(\{\omega:
+X(\omega) = x\} \cap \{\omega: Y(\omega) = y\})\)</span>. Same concept
+of joint probabilities, we are just constructing our events from random
+variables. Lets construct the joint distribution for a max of 3
+requests. We cannot have more sessions than requests, so we will have a
+max of 3 sessions as well.</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>Y = 0</th>
+<th>Y = 1</th>
+<th>Y = 2</th>
+<th>Y = 3</th>
+<th><span class="math inline">\(\mathbf {P(X)}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>X = 0</strong></td>
+<td><span class="math inline">\(0.10\)</span></td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td><span class="math inline">\(\mathbf {0.10}\)</span></td>
+</tr>
+<tr>
+<td><strong>X = 1</strong></td>
+<td>-</td>
+<td><span class="math inline">\(0.25\)</span></td>
+<td>-</td>
+<td>-</td>
+<td><span class="math inline">\(\mathbf {0.25}\)</span></td>
+</tr>
+<tr>
+<td><strong>X = 2</strong></td>
+<td>-</td>
+<td><span class="math inline">\(0.20\)</span></td>
+<td><span class="math inline">\(0.15\)</span></td>
+<td>-</td>
+<td><span class="math inline">\(\mathbf {0.35}\)</span></td>
+</tr>
+<tr>
+<td><strong>X = 3</strong></td>
+<td>-</td>
+<td><span class="math inline">\(0.10\)</span></td>
+<td><span class="math inline">\(0.13\)</span></td>
+<td><span class="math inline">\(0.07\)</span></td>
+<td><span class="math inline">\(\mathbf {0.30}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathbf {P(Y)}\)</span></td>
+<td><span class="math inline">\(\mathbf {0.10}\)</span></td>
+<td><span class="math inline">\(\mathbf {0.55}\)</span></td>
+<td><span class="math inline">\(\mathbf {0.28}\)</span></td>
+<td><span class="math inline">\(\mathbf {0.07}\)</span></td>
+<td><span class="math inline">\(\mathbf {1.0}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>The dashes are impossible events, e.g., I cannot have <span
+class="math inline">\(0\)</span> requests but <span
+class="math inline">\(3\)</span> sessions, or <span
+class="math inline">\(0\)</span> sessions but <span
+class="math inline">\(3\)</span> requests.</p>
+<p>The joint p.m.f can be represented as <span
+class="math inline">\(p(x, y) = P(X = x, Y = y)\)</span>. The individual
+p.m.fs can be <span class="math inline">\(p_X(x) = P(X = x)\)</span> and
+<span class="math inline">\(p_Y(y) = P(Y = y)\)</span>. From the joint
+p.m.f I can recover either variable on its own by <strong>summing
+out</strong> the one I do not care about: <span class="math display">\[
+p_X(x) = \sum_y p(x, y), \qquad p_Y(y) = \sum_x p(x, y).
+\]</span> This is called the <strong>marginal</strong> distribution, and
+the name is literal: if you write the joint as a table, the row sums and
+column sums land in the <em>margins</em> of that table. Summing out a
+variable is called <strong>marginalizing</strong> it. (For continuous
+variables it is the same move with an integral: <span
+class="math inline">\(f_X(x) = \int f(x,y)\,dy\)</span>.)</p>
+<p>And if I fix one variable and ask about the other, I am back to
+conditional probability — applied to distributions: <span
+class="math display">\[
+p_{Y \mid X}(y \mid x) = \frac{p(x, y)}{p_X(x)} \\
+p(x, y) = p_{Y \mid X}(y \mid x)\;p_X(x) = p_{X \mid Y}(x \mid
+y)\;p_Y(y)
+\]</span> If I want to find out the conditional probability distribution
+of <span class="math inline">\(Y\)</span> when <span
+class="math inline">\(X = 2\)</span>, I just slice that row out and
+rescale it.</p>
+<table>
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 4%" />
+<col style="width: 27%" />
+<col style="width: 27%" />
+<col style="width: 4%" />
+<col style="width: 27%" />
+</colgroup>
+<thead>
+<tr>
+<th></th>
+<th>Y = 0</th>
+<th>Y = 1</th>
+<th>Y = 2</th>
+<th>Y = 3</th>
+<th><span class="math inline">\(\mathbf {P(X)}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>X = 2</strong></td>
+<td>-</td>
+<td><span class="math inline">\(\frac{0.20}{0.35} =
+\frac{4}{7}\)</span></td>
+<td><span class="math inline">\(\frac{0.15}{0.35} =
+\frac{3}{7}\)</span></td>
+<td>-</td>
+<td><span class="math inline">\(\mathbf {\frac{0.35}{0.35} =
+1}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Similarly if I were conditioning on <span
+class="math inline">\(Y\)</span>, I’d just slice that column out and
+rescale.</p>
+<figure>
+<img src="./imgs/m3-joint-marginal-conditional.png"
+alt="m3-joint-marginal-conditional" />
+<figcaption
+aria-hidden="true">m3-joint-marginal-conditional</figcaption>
+</figure>
+<blockquote>
+<p>A joint distribution of two variables only makes sense if both the
+variables share the same sample space as their domain.</p>
+</blockquote>
+<h2 id="independence">Independence</h2>
+<p>Two random variables are <strong>independent</strong> when knowing
+one tells you nothing about the other. If I flip two coins and get a
+heads on the first one, it does not tell me anything about the second
+one.</p>
+<blockquote>
+<p>I tried to come up with a clean real world example of independence
+but the only ones I could come up with were still pretty contrived. Here
+is one. Going back to our Latency example, lets say we define two new
+random variables on that sample space - <span
+class="math inline">\(S\)</span> the class of HTTP status of the
+response, and <span class="math inline">\(R\)</span>, the first two bits
+of the trace ID that our OpenTelemetry SDK generates for each request.
+The trace ID is supposed to be completely random. So knowing its first
+two bits should not be able to tell us anything about the response
+status.</p>
+</blockquote>
+<p>Intuitively, if I know that <span class="math inline">\(Y =
+y\)</span> happened, that does not change the probability of <span
+class="math inline">\(X = x\)</span> happening (or vice-versa). <span
+class="math inline">\(P(X = x \mid Y = y) = P(X = x)\)</span>, then
+<span class="math inline">\(X\)</span> and <span
+class="math inline">\(Y\)</span> are independent of each other. Of
+course this means that <span class="math inline">\(P(Y = y \mid X = x) =
+P(Y = y)\)</span> as well. Writing this out with p.m.fs: <span
+class="math display">\[
+\begin{align}
+X \perp Y &amp;\Rightarrow p_{X \mid Y}(x \mid y) = p_X(x) \\
+&amp;\Rightarrow p_{Y \mid X}(y \mid x) = p_Y(y)
+\end{align}
+\]</span></p>
+<p>Equivalently, unlike equation in the last section, this means that
+the joint probability is simply the product of the two individual
+probabilities. <span class="math display">\[
+X \perp Y \iff p(x, y) = p_X(x)\;p_Y(y)
+\]</span></p>
+<p>Here is what such a joint distribution will look like:</p>
+<table>
+<thead>
+<tr>
+<th>X \ Y</th>
+<th>Y = 1</th>
+<th>Y = 2</th>
+<th>Y = 3</th>
+<th><span class="math inline">\(\mathbf {p_X}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>X = 1</strong></td>
+<td>0.10</td>
+<td>0.06</td>
+<td>0.04</td>
+<td><strong>0.20</strong></td>
+</tr>
+<tr>
+<td><strong>X = 2</strong></td>
+<td>0.25</td>
+<td>0.15</td>
+<td>0.10</td>
+<td><strong>0.50</strong></td>
+</tr>
+<tr>
+<td><strong>X = 3</strong></td>
+<td>0.15</td>
+<td>0.09</td>
+<td>0.06</td>
+<td><strong>0.30</strong></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathbf {p_Y}\)</span></td>
+<td><strong>0.50</strong></td>
+<td><strong>0.30</strong></td>
+<td><strong>0.20</strong></td>
+<td><strong>1.00</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Each row and each column are simply scaled versions of their
+margins.</p>
+<table>
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr>
+<th>X \ Y</th>
+<th>Y = 1</th>
+<th>Y = 2</th>
+<th>Y = 3</th>
+<th><span class="math inline">\(\mathbf {p_X}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>X = 1</strong></td>
+<td><span class="math inline">\(p(1, 1) = p_X(1)p_Y(1)\)</span></td>
+<td><span class="math inline">\(p(1, 2) = p_X(1)p_Y(2)\)</span></td>
+<td><span class="math inline">\(p(1, 3) = p_X(1)p_Y(3)\)</span></td>
+<td><span class="math inline">\(p_X(1)\)</span></td>
+</tr>
+<tr>
+<td><strong>X = 2</strong></td>
+<td><span class="math inline">\(p(2, 1) = p_X(2)p_Y(1)\)</span></td>
+<td><span class="math inline">\(p(2, 2) = p_X(2)p_Y(2)\)</span></td>
+<td><span class="math inline">\(p(2, 3) = p_X(2)p_Y(3)\)</span></td>
+<td><span class="math inline">\(p_X(2)\)</span></td>
+</tr>
+<tr>
+<td><strong>X = 3</strong></td>
+<td><span class="math inline">\(p(3, 1) = p_X(3)p_Y(1)\)</span></td>
+<td><span class="math inline">\(p(3, 2) = p_X(3)p_Y(2)\)</span></td>
+<td><span class="math inline">\(p(3, 3) = p_X(3)p_Y(3)\)</span></td>
+<td><span class="math inline">\(p_X(3)\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathbf {p_Y}\)</span></td>
+<td><span class="math inline">\(p_Y(1)\)</span></td>
+<td><span class="math inline">\(p_Y(2)\)</span></td>
+<td><span class="math inline">\(p_Y(3)\)</span></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>To get the conditional probability distribution of <span
+class="math inline">\(Y\)</span> when <span class="math inline">\(X =
+2\)</span> I slice out the <span class="math inline">\(X = 2\)</span>
+row and rescale -</p>
+<table>
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr>
+<th>X\Y</th>
+<th>Y = 1</th>
+<th>Y = 2</th>
+<th>Y = 3</th>
+<th><span class="math inline">\(\mathbf {p_X}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>X = 2</strong></td>
+<td><span class="math inline">\(\frac{0.25}{0.50} = 0.50\)</span></td>
+<td><span class="math inline">\(\frac{0.15}{0.50} = 0.30\)</span></td>
+<td><span class="math inline">\(\frac{0.10}{0.50} = 0.20\)</span></td>
+<td><span class="math inline">\(\mathbf {0.50}\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\mathbf {p_Y}\)</span></td>
+<td><span class="math inline">\(\mathbf {0.50}\)</span></td>
+<td><span class="math inline">\(\mathbf {0.30}\)</span></td>
+<td><span class="math inline">\(\mathbf {0.20}\)</span></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>The conditional probabilities are the same as <span
+class="math inline">\(p_Y\)</span>.</p>
+<h2 id="conditional-independence">Conditional Independence</h2>
+<p>Here is the subtle one, and it is worth slowing down on because it is
+the seed of every graphical model later. <span
+class="math inline">\(X\)</span> and <span
+class="math inline">\(Y\)</span> are <strong>conditionally independent
+given <span class="math inline">\(Z\)</span></strong> when, <em>once you
+know <span class="math inline">\(Z\)</span></em>, they carry no further
+information about each other: <span class="math display">\[
+X \perp Y \mid Z \iff p(x, y \mid z) = p(x \mid z)\, p(y \mid z) \quad
+\text{for all } x, y, z.
+\]</span></p>
+<p>The canonical case is a <strong>common cause</strong>. Suppose the
+server load <span class="math inline">\(Z\)</span> drives both the
+request rate (QPS) and the latency: heavy load tends to push both up.
+Then measured across all conditions, QPS and latency are correlated —
+see one high and you should bet the other is high too. But that
+correlation is entirely routed <em>through</em> the load. If I hold the
+load fixed at some level <span class="math inline">\(z\)</span> and look
+only within that slice, the residual wiggle in QPS and the residual
+wiggle in latency may have nothing to do with each other. They are
+dependent marginally, conditionally independent given <span
+class="math inline">\(Z\)</span>.</p>
+<p>The trap to avoid: conditional independence neither implies nor is
+implied by ordinary (marginal) independence. Conditioning on the right
+thing can <em>create</em> independence (the common-cause case above) and
+conditioning on the wrong thing can <em>destroy</em> it (conditioning on
+a common effect — the “explaining away” pattern). Which is exactly why,
+later, we will want a picture — a graph — to keep track of what is
+independent of what given what.</p>
+<h2 id="conditional-expectation">Conditional Expectation</h2>
+<p>Once I have a conditional distribution, I can take its mean like any
+other distribution: <span class="math display">\[
+E[Y \mid X = x] = \sum_y y \; p_{Y \mid X}(y \mid x).
+\]</span> This is one number for each value <span
+class="math inline">\(x\)</span>. Letting <span
+class="math inline">\(x\)</span> vary, <span class="math inline">\(E[Y
+\mid X]\)</span> becomes a <strong>function of <span
+class="math inline">\(X\)</span></strong> — and since <span
+class="math inline">\(X\)</span> is a random variable, so is <span
+class="math inline">\(E[Y \mid X]\)</span>. That is the mental step
+worth getting used to: the conditional expectation is not a single
+number, it is a new random variable that reads off <span
+class="math inline">\(X\)</span> and returns the average <span
+class="math inline">\(Y\)</span> you should expect.</p>
+<p>For the QPS joint, each request independently belongs to a new
+session with some probability <span class="math inline">\(q\)</span>, so
+given <span class="math inline">\(X = x\)</span> requests, the expected
+number of distinct sessions is <span class="math inline">\(E[Y \mid X =
+x] = q\,x\)</span> — a straight line in <span
+class="math inline">\(x\)</span>.</p>
+<figure>
+<img src="./imgs/m3-conditional-expectation.png"
+alt="Scatter of (X, Y) samples with E[Y given X] = q x drawn through them; the conditional expectation is the mean of each vertical slice and the best predictor of Y from X." />
+<figcaption aria-hidden="true">Scatter of (X, Y) samples with E[Y given
+X] = q x drawn through them; the conditional expectation is the mean of
+each vertical slice and the best predictor of Y from X.</figcaption>
+</figure>
+<p>The line threads the mean of each vertical strip of points, which is
+what “mean of the conditional distribution” looks like when you plot it.
+And there is a deeper reason this object matters, one that lands for
+anyone comfortable with linear algebra: <strong><span
+class="math inline">\(E[Y \mid X]\)</span> is the best predictor of
+<span class="math inline">\(Y\)</span> from <span
+class="math inline">\(X\)</span> in the mean-squared sense.</strong>
+Among all functions <span class="math inline">\(g(X)\)</span>, the one
+that minimizes <span class="math inline">\(E[(Y - g(X))^2]\)</span> is
+<span class="math inline">\(g(X) = E[Y \mid X]\)</span>. Geometrically
+it is an <strong>orthogonal projection</strong> — project the random
+variable <span class="math inline">\(Y\)</span> onto the subspace of all
+functions of <span class="math inline">\(X\)</span>, and the shadow you
+get is the conditional expectation; the prediction error is orthogonal
+to everything you could have built from <span
+class="math inline">\(X\)</span>. That projection picture is precisely
+what regression is doing, and we will cash it out in the regression
+module.</p>
+<p>One identity falls straight out and will connect to the next section
+— the <strong>law of total expectation</strong> (or “tower rule”): <span
+class="math display">\[
+E[Y] = E\big[\,E[Y \mid X]\,\big].
+\]</span> To get the overall average of <span
+class="math inline">\(Y\)</span>, average the per-<span
+class="math inline">\(x\)</span> conditional averages, weighting each by
+how likely that <span class="math inline">\(x\)</span> is. That is
+“average over cases,” and it is the expectation-level version of the
+theorem below.</p>
+<h2 id="the-total-probability-theorem">The Total Probability
+Theorem</h2>
+<p>Suppose I chop the sample space into a set of mutually exclusive,
+exhaustive cases <span class="math inline">\(A_1, A_2, \dots,
+A_n\)</span> (a <strong>partition</strong> — exactly the sample-space
+conditions from Module 1, now applied to events). Then any event <span
+class="math inline">\(B\)</span> can be reached only through one of the
+cases, so its probability is the sum of the case-by-case probabilities,
+each weighted by how likely the case is: <span class="math display">\[
+P(B) = \sum_{i} P(B \mid A_i)\, P(A_i).
+\]</span> This is just marginalization wearing different clothes: I am
+summing the joint <span class="math inline">\(P(B \cap A_i) = P(B \mid
+A_i)P(A_i)\)</span> over all the <span
+class="math inline">\(A_i\)</span> to marginalize the <span
+class="math inline">\(A_i\)</span> away and land on <span
+class="math inline">\(P(B)\)</span> alone. Concretely, the overall
+probability a request times out is the timeout rate during peak times
+the fraction of peak traffic, plus the timeout rate off-peak times the
+fraction of off-peak traffic — I average the conditional timeout rates
+over the traffic mix.</p>
+<h2 id="bayes-theorem">Bayes’ Theorem</h2>
+<p>Everything above now assembles into the one result that makes
+conditioning genuinely powerful — the ability to
+<strong>reverse</strong> the direction of conditioning. Start from the
+multiplication rule written both ways, <span class="math inline">\(P(A
+\cap B) = P(B \mid A)P(A) = P(A \mid B)P(B)\)</span>, and solve for the
+conditional you want: <span class="math display">\[
+P(A \mid B) = \frac{P(B \mid A)\, P(A)}{P(B)},
+\]</span> where the denominator <span
+class="math inline">\(P(B)\)</span> is usually filled in by the
+total-probability theorem. The pieces have names worth stating
+plainly:</p>
+<ul>
+<li><span class="math inline">\(P(A)\)</span> is the
+<strong>prior</strong> — what I believed about <span
+class="math inline">\(A\)</span> before seeing the evidence.</li>
+<li><span class="math inline">\(P(B \mid A)\)</span> is the
+<strong>likelihood</strong> — how probable the evidence <span
+class="math inline">\(B\)</span> is if <span
+class="math inline">\(A\)</span> were true.</li>
+<li><span class="math inline">\(P(B)\)</span> is the
+<strong>evidence</strong> (or marginal likelihood) — how probable the
+evidence is overall, averaged across the cases.</li>
+<li><span class="math inline">\(P(A \mid B)\)</span> is the
+<strong>posterior</strong> — my updated belief about <span
+class="math inline">\(A\)</span> after seeing <span
+class="math inline">\(B\)</span>.</li>
+</ul>
+<p>The reason this is more than algebra is that the direction I
+<em>have</em> and the direction I <em>want</em> are usually opposite. My
+alerting system is characterized in the forward direction: given a real
+incident, how often does it page (<span
+class="math inline">\(P(\text{page} \mid \text{incident})\)</span>, the
+sensitivity)? But at 3am, staring at a page, I want the reverse: given
+that it paged, is this real (<span
+class="math inline">\(P(\text{incident} \mid \text{page})\)</span>)?
+Bayes flips one into the other — and the flip depends on the
+<strong>base rate</strong> <span
+class="math inline">\(P(\text{incident})\)</span> in a way that is
+famously easy to get wrong.</p>
+<figure>
+<img src="./imgs/m3-bayes-mosaic.png"
+alt="Natural-frequency mosaic for the alerting example: with a low base rate, the paged false alarms from the large ‘no incident’ block outnumber the paged real incidents, so the posterior probability that a page is real is far lower than the detector’s sensitivity suggests." />
+<figcaption aria-hidden="true">Natural-frequency mosaic for the alerting
+example: with a low base rate, the paged false alarms from the large ‘no
+incident’ block outnumber the paged real incidents, so the posterior
+probability that a page is real is far lower than the detector’s
+sensitivity suggests.</figcaption>
+</figure>
+<p>Take a genuinely good detector — pages <span
+class="math inline">\(90\%\)</span> of real incidents, and only
+false-alarms <span class="math inline">\(10\%\)</span> of the time — but
+incidents are rare, say <span class="math inline">\(5\%\)</span> of the
+windows that could trigger it. Out of every <span
+class="math inline">\(100\)</span> windows: <span
+class="math inline">\(5\)</span> are incidents and about <span
+class="math inline">\(4.5\)</span> of those page; <span
+class="math inline">\(95\)</span> are quiet and about <span
+class="math inline">\(9.5\)</span> of <em>those</em> page anyway. So of
+the <span class="math inline">\(\approx 14\)</span> pages that fire,
+only <span class="math inline">\(4.5\)</span> are real — the posterior
+<span class="math inline">\(P(\text{incident} \mid \text{page}) \approx
+32\%\)</span>. A “<span class="math inline">\(90\%\)</span> accurate”
+detector produces pages that are wrong more often than right, purely
+because the base rate is low and there is so much more quiet traffic to
+throw off false alarms. The mosaic makes it visual: the false-alarm
+strip, though short, is <em>wide</em>, and wide-and-short beats
+narrow-and-tall.</p>
+<p>That is why these two theorems belong here and not back in Module 2:
+both are statements about conditional probability, and neither means
+anything until <span class="math inline">\(P(A \mid B) = P(A \cap
+B)/P(B)\)</span> is on the table first. With that in hand, the whole
+machinery of updating beliefs from evidence — which is what the rest of
+the course is really about — is just Bayes’ theorem applied over and
+over.</p>
+</body>
+</html>
