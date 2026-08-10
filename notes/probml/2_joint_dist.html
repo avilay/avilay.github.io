@@ -327,8 +327,8 @@
   type="text/javascript"></script>
 </head>
 <body>
-<h1 id="conditional-probability">Conditional Probability</h1>
-<h2 id="conditional-probability-1">Conditional Probability</h2>
+<h1 id="joint-distributions">Joint Distributions</h1>
+<h2 id="conditional-probability">Conditional Probability</h2>
 <p>So far a probability has been a number attached to an event,
 comprised of outcomes picked from the whole sample space <span
 class="math inline">\(\Omega\)</span>. But most questions I actually
@@ -632,15 +632,16 @@ p.m.f I can recover either variable on its own by <strong>summing
 out</strong> the one I do not care about: <span class="math display">\[
 p_X(x) = \sum_y p(x, y), \qquad p_Y(y) = \sum_x p(x, y).
 \]</span> This is called the <strong>marginal</strong> distribution, and
-the name is literal: if you write the joint as a table, the row sums and
-column sums land in the <em>margins</em> of that table. Summing out a
-variable is called <strong>marginalizing</strong> it. (For continuous
-variables it is the same move with an integral: <span
+the name is literal: if you write the joint distribution as a table, the
+row sums and column sums land in the <em>margins</em> of that table.
+Summing out a variable is called <strong>marginalizing</strong> it. (For
+continuous variables it is the same move with an integral: <span
 class="math inline">\(f_X(x) = \int f(x,y)\,dy\)</span>.)</p>
 <p>And if I fix one variable and ask about the other, I am back to
 conditional probability — applied to distributions: <span
 class="math display">\[
-p_{Y \mid X}(y \mid x) = \frac{p(x, y)}{p_X(x)} \\
+p_{Y \mid X}(y \mid x) = \frac{p(x, y)}{p_X(x)} = \frac{p(x, y)}{\sum_y
+p(x, y)}\\
 p(x, y) = p_{Y \mid X}(y \mid x)\;p_X(x) = p_{X \mid Y}(x \mid
 y)\;p_Y(y)
 \]</span> If I want to find out the conditional probability distribution
@@ -771,6 +772,12 @@ X \perp Y \iff p(x, y) = p_X(x)\;p_Y(y)
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p>How did I generate this table? I just fixed the values of <span
+class="math inline">\(p_X\)</span> and <span
+class="math inline">\(p_Y\)</span> and multiplied them for each
+cell.</p>
+</blockquote>
 <p>Each row and each column are simply scaled versions of their
 margins.</p>
 <table>
@@ -824,7 +831,7 @@ margins.</p>
 <p>To get the conditional probability distribution of <span
 class="math inline">\(Y\)</span> when <span class="math inline">\(X =
 2\)</span> I slice out the <span class="math inline">\(X = 2\)</span>
-row and rescale -</p>
+row and rescale.</p>
 <table>
 <colgroup>
 <col style="width: 13%" />
@@ -862,6 +869,36 @@ row and rescale -</p>
 <p>The conditional probabilities are the same as <span
 class="math inline">\(p_Y\)</span>.</p>
 <h2 id="conditional-independence">Conditional Independence</h2>
+<p>Lets say we have two microservices ServiceX and ServiceY, both using
+DatabaseZ. All three are running on fairly indpendent infrastructure.
+Lets say we capture trace logs of all three services and store these in
+groups of 1-second intervals. Our experiment is to randomly sample one
+such window - <span class="math inline">\(\omega\)</span>. We have three
+random variables that measure the performance of each of these services.
+Performance can be defined as some function of latency, QPS, error
+rates, etc. <span class="math inline">\(X(\omega) = x\)</span> is the
+performance of ServiceX, <span class="math inline">\(Y(\omega) =
+y\)</span> is the performance of ServiceB, and <span
+class="math inline">\(Z(\omega) = z\)</span> is the performance of
+DatabaseZ. If I know that DatabaseZ is operating fine, then any
+performance degradation that I might see in ServiceX and ServiceY are
+independent of each other, i.e., if I further know that ServiceY is
+having an outage, it is not going to tell me anything about the
+performance of ServiceX. On the other hand, if know that there is an
+outage in DatabaseZ, then there is a very high chance that I’ll see both
+ServiceX and ServiceY also degrade. Here the variables <span
+class="math inline">\(X\)</span> and <span
+class="math inline">\(Y\)</span> are <strong>conditionally independent
+given <span class="math inline">\(Z\)</span></strong>. <span
+class="math display">\[
+X \perp Y \mid Z \iff p(x, y \mid z) = p(x \mid z)\;p(y \mid z) \quad
+\forall \; x, y, z
+\]</span></p>
+<p>Lets have three random variables that measure the performance of all
+three. Performance can be some function of QPS, latencies, error rates,
+etc. <span class="math display">\[
+A()
+\]</span></p>
 <p>Here is the subtle one, and it is worth slowing down on because it is
 the seed of every graphical model later. <span
 class="math inline">\(X\)</span> and <span

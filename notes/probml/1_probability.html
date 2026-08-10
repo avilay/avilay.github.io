@@ -345,95 +345,94 @@ outcomes can happen; and the outcomes have to be
 happen. When we learn that a specific outcome <span
 class="math inline">\(\bar \omega\)</span> has actually happened, it is
 called the <strong>realized outcome</strong>.</p>
-<p>Lets us look at some real world examples of experiments, sample
-spaces, and outcomes.</p>
-<h4 id="qps-queries-per-second">QPS (Queries Per Second)</h4>
-<p>Even though it says QPS in the heading, QPS is already an aggregate
-derived quantity, what my experiment will really measure is <em>how many
-requests hit my webserver in a 1 second window</em>. At a minimum I’ll
-see <span class="math inline">\(0\)</span> requests in my 1-second
-window, and at most I’ll see <span class="math inline">\(N\)</span>,
-which is some theoretical maximum based on the network bandwidth
-available to the web server and the minimum packet size it can receive.
-I can define the sample space as the set of integers from <span
-class="math inline">\(0\)</span> to <span
-class="math inline">\(N\)</span>, i.e., <span
-class="math inline">\(\Omega = \{ 0, 1, \cdots, N \}\)</span>. It meets
-both the criteria of a sample space, each outcome is mutually exclusive,
-if I get 23 requests in a single 1-second window, then I cannot get any
-other number; and they are exhaustive, I will measure at least one of
-the numbers in my sample space. But I don’t have to define my sample
-space in neat mathematical terms. I can define it to be a table with
-each request in the 1-second window showing up as a row. I get something
-like this:</p>
-<table>
-<colgroup>
-<col style="width: 38%" />
-<col style="width: 61%" />
-</colgroup>
-<thead>
-<tr>
-<th>Client IP</th>
-<th>Bytes Downloaded</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>All possible IP addresses in the world</td>
-<td>From <span class="math inline">\(S_1\)</span> the size of the
-smallest web page hosted by this server to <span
-class="math inline">\(S_2\)</span>, the size of the largest web page
-hosted by this server.</td>
-</tr>
-</tbody>
-</table>
-<p>Each element <span class="math inline">\(\omega\)</span> is the
-actual table, and the number of rows will be integers between <span
-class="math inline">\(0\)</span> and <span
-class="math inline">\(N\)</span>. Again, it is trivial to see that this
-sample space meets both the criteria of mutually exclusive and
-exhaustive.</p>
-<h4 id="latency">Latency</h4>
-<p>Experiment is to measure <em>how long it takes between issuing one
-HTTP request to my webserver and getting the complete response
-back</em>. This latency will have a lower bound <span
-class="math inline">\(l\)</span>, based on how far away the client is
-from the server. The lower bound will have two floors - because warm
-HTTP requests don’t need the added round trip time for establishing a
-TCP handshake. <span class="math inline">\(l\)</span> is the cold start
-lower bound. Lets say my webserver has a timeout of 30 seconds, so the
-maximum value I’ll record is 30 seconds, even though strictly speaking
-the request might’ve completed had the timeout been longer, so the true
-latency was <span class="math inline">\(&gt; 30s\)</span>. Regardless of
-what notes I attach to the reading, the <em>recorded</em> value will be
-the timeout <span class="math inline">\(c\)</span>. Because many
-different requests all get recorded as exactly <span
-class="math inline">\(c\)</span>, that single value accumulates a real
-chunk of probability - because of that it is called an
-<strong>atom</strong>. This atom is an artifact of the measurement
-clipping. There is nothing special about <span
-class="math inline">\(c\)</span> as far as the true latency is
-concerned. Now as before I can define my sample space in a number of
-different ways:</p>
+<p>Lets motivate the rest of this tutorial with a real world
+scenario.</p>
+<h4 id="microservices-telemetry">Microservices Telemetry</h4>
+<p>Lets say I am running a news web app. My architecture is pretty
+simple, a single Frontend service (FE) gets the user request, fans it
+out to two other services - Ads and Newsfeed (NF) - in parallel using
+separate connection pools. Both these downstream services are pretty
+self-contained and running on separate infrastructure, making them
+relatively independent of each other. The only thing they have in common
+is the traffic load. The Ads service recommends ads to send to the user,
+the Newsfeed service assembles their news feed. If the total processing
+time for the FE is taking too long, it will abort the request with a
+<code>504 Gateway Timeout</code> response. This is what a gunicorn
+worker timeout setting would do.</p>
+<p>Lets say I want to measure Queries Per Second (QPS). The minimum
+number of queries I’ll see in a 1-second window will be <span
+class="math inline">\(0\)</span>, and the maximum will be some
+theoretical maximum depending on the network bandwidth, lets say <span
+class="math inline">\(N\)</span>. I can define my sample space like this
+<span class="math inline">\(\Omega = \{0, 1, \dots, N\}\)</span>.</p>
+<p>An outcome <span class="math inline">\(\omega\)</span> will be a
+single number from this set. I can use this sample space to measure QPS
+or unique sessions per second, <strong>but not both</strong>, the
+reasons for which will become clear as we discuss random variables in a
+later section. This sample space is not very extendible, e.g., what if I
+want to measure the total number of bytes downloaded in the same
+1-second window and do some joint analysis of these measures?</p>
+<p>To do all sorts of different analysis, I have set up telemetry to
+capture the full trace of each and every request that hits the FE. The
+trace will capture the following information:</p>
 <ul>
-<li><span class="math inline">\(\Omega = (-\infty, \infty)\)</span></li>
-<li><span class="math inline">\(\Omega = [l, \infty]\)</span></li>
-<li><span class="math inline">\(\Omega = [l, c]\)</span></li>
+<li>Timestamp</li>
+<li>User Agent</li>
+<li>Content-Length</li>
+<li>HTTP status</li>
+<li>User ID</li>
+<li>Request ID</li>
+<li>Session ID</li>
+<li>FE-Start-Timestamp</li>
+<li>FE-End-Timestamp</li>
+<li>Ads-Start-Timestamp</li>
+<li>Ads-End-Timestamp</li>
+<li>NF-Start-Timestamp</li>
+<li>NF-End-Timestamp</li>
+<li>Next-Action</li>
+<li>…</li>
 </ul>
-<p>Or, as in the QPS example I can create a richer definition like:</p>
+<p>Now, I can create different sample spaces from this telemetry
+depending on my needs.</p>
 <ul>
-<li><span class="math inline">\(\omega =\)</span> (connection state,
-server processing time, network delay).</li>
-<li><span class="math inline">\(\omega =\)</span> (full wireshark
-capture).</li>
+<li>Group the logs into 1-second intervals based on their timestamp.
+This will enable me to measure things like QPS, unique sessions per
+second, total bytes downloaded per second, all with a single sample
+space.</li>
+<li>Group the logs by their Session ID which will enable me to measure
+business metrics like the Click-Through-Rate (CTR), bounce rate, dwell
+time, etc.</li>
+<li>I can even keep the sample space as a collection of individual
+traces without any partitioning. From this I can measure things like the
+latency; whether the request originated from a mobile, a tablet, or a
+PC; etc.</li>
 </ul>
-<p>As we can see from the above examples, sample spaces do not have to
-be numeric, they can have elements that are numeric (e.g., QPS), or they
-can fully categorical (e.g., coin flips). The numeric part can be
-discrete (e.g., QPS) or it can be continuous (e.g., latency). Discrete
-spaces are more intuitive to reason about. Continuous spaces on the
-other hand require knowledge of measure theory and can often get
-unintuitive.</p>
+<p>I can think of the sample space as a bunch of tables, with each row
+in a table being a single log, <span class="math inline">\(\Omega =
+\{(l_{11}, l_{12}, \dots), (l_{21}, l_{22}, \dots), \dots\}\)</span>. It
+will be a mistake to think of the sample space as consisting of the logs
+that I have captured so far. Most trivially, logs that I capture
+tomorrow will have different timestamps, so they will necessarily not
+drawn from this faulty sample space. Moreover, the actual sample space
+is very very large, the timestamp fields can have any value from <span
+class="math inline">\((0, \infty)\)</span>, the UUID4 fields can take
+any one of the <span class="math inline">\(2^{122}\)</span> values, etc.
+Each row in each table is drawn from the cross-product of the field
+ranges, and a table is a sequence of up to <span
+class="math inline">\(N\)</span> such rows, so the size of <span
+class="math inline">\(\Omega\)</span> is that product raised to <span
+class="math inline">\(N\)</span>. Yes, large!</p>
+<p>Randomly sampling a value from this space is akin to selecting a
+collection of logs <span class="math inline">\(\omega = (l_{i1}, l_{i2},
+\dots)\)</span>, not a single number like we have seen so far. Having a
+single sample space that can enable different measures is useful when we
+want to do joint analysis of different measures.</p>
+<p>In this real-life setting, the sample space is not a neat
+mathematical set, like the one we saw in the die-roll setting. Here it
+is a complex object that will have to be further processed in order to
+extract relevant information out of it. And the space of individual
+elements can be discrete - like the number of requests in a 1-second
+window, continuous like latency, or categorical like the user agent.</p>
 <h2 id="probability-1">Probability</h2>
 <p>Probability is not some actual property that exists, e.g., a coin
 does not have some probability attribute that I can read out in
@@ -491,8 +490,10 @@ space.</p>
 <p>For the die-roll experiment, the most straightforward event space
 that I can construct is the full powerset of <span
 class="math inline">\(\{1, 2, 3, 4, 5, 6\}\)</span> with all 64
-elements. It will meet all the three rules. But I can also definte an
-event space as follows:</p>
+elements. It will meet all the three rules. For completion under
+countable unions, I can union any arbitrary number of events, and it
+will still be in the event space.</p>
+<p>But I can also definte an event space as follows:</p>
 <ul>
 <li><span class="math inline">\(E\)</span> an even number appears
 face-up, i.e., <span class="math inline">\(E = \{2, 4, 6\}\)</span></li>
@@ -500,14 +501,16 @@ face-up, i.e., <span class="math inline">\(E = \{2, 4, 6\}\)</span></li>
 face-up, i.e., <span class="math inline">\(O = \{1, 3, 5\}\)</span></li>
 </ul>
 <p>I can define <span class="math inline">\(\mathscr F = \{E, O, \Omega,
-\emptyset\}\)</span>. <span class="math inline">\(O\)</span> and <span
-class="math inline">\(E\)</span> are complements of each other, so are
-<span class="math inline">\(\Omega\)</span> and <span
-class="math inline">\(\emptyset\)</span>. The union of <span
+\emptyset\}\)</span>. It obviously contains <span
+class="math inline">\(\Omega\)</span>; each event’s complement is in
+<span class="math inline">\(\mathscr F\)</span>, <span
 class="math inline">\(E\)</span> and <span
-class="math inline">\(O\)</span> is the full sample space which is also
-part of this event space. It can be seen that all three conditions are
-met.</p>
+class="math inline">\(O\)</span> are complements of each other, <span
+class="math inline">\(\Omega\)</span> and <span
+class="math inline">\(\emptyset\)</span> are complements of each other.
+I can pick any number of events from these four, and their union will be
+<span class="math inline">\(\Omega\)</span>, which is also in <span
+class="math inline">\(\mathscr F\)</span>. All three rules are met.</p>
 <p>Probability can now be defined as a function that assigns a real
 number to each event in an event space. The function <span
 class="math inline">\(P\)</span> is called a <strong>probability
@@ -552,23 +555,15 @@ valid member of the event space but its probability measure is <span
 class="math inline">\(0\)</span>. This does not mean it can never
 happen, in fact it did just happen! The only impossible event for
 continuous spaces is the <span class="math inline">\(\emptyset\)</span>.
-We have certain outcome sets like the Vitaly set that are not a valid
-part of any event space, these are neither impossible nor possible. They
-don’t have a probability measure, so it makes no sense to ask whether
-they are possible or not.</p>
-<p>A caution on the converse, because it is easy to over-state: for
-continuous spaces the guarantee only runs one way. A <em>single
-outcome</em> always has probability <span
-class="math inline">\(0\)</span>, but an <em>interval</em> is
-<strong>not</strong> guaranteed to have positive probability. An
-interval has positive probability only where the density is actually
-positive; an interval that sits outside the support (say latencies in
-<span class="math inline">\([-5, -3]\)</span>, or a genuine gap in the
-distribution) still measures <span class="math inline">\(0\)</span>
-despite being a whole range of outcomes. Where the density is positive,
-e.g. <span class="math inline">\(P(\{\omega: 2.0 \le \omega \le
-2.5\})\)</span> for a latency that plausibly lands there, we do get a
-positive number we can work with.</p>
+This is why, for continuous spaces, we like to deal in probabilities of
+ranges, because they can have positive probability. Of course, not all
+intervals will have positive non-zero probability. E.g., latency will
+have zero probabality for negative ranges like <span
+class="math inline">\((-5, -3)\)</span>. Another weirdness for
+continuous spaces is that there are certain outcome sets like the Vitaly
+set that are not a valid part of any event space, these are neither
+impossible nor possible. They don’t have a probability measure, so it
+makes no sense to ask whether they are possible or not.</p>
 <h2 id="continuous-and-discrete-spaces">Continuous and Discrete
 Spaces</h2>
 <p>Asking whether a quantity is continuous is an abstraction over three
@@ -627,78 +622,57 @@ out. But if I am calculating the 99 percentile of latency, where I only
 have a few data points to begin with, chunkiness can be a real
 problem.</p>
 <h4 id="distribution">Distribution</h4>
-<p>The question we want to ask here is whether the probability spreads
-out, or does it pile up on single points? A continuous distribution
-smears probability over intervals with no single value carrying a
-positive bump. A latent quantity which is inherently discrete - like the
-QPS - will have a bumpy, non-continuous distribution. A latent quantity
-like height which has negligible chunky measured values, but no single
-value’s probability dominates, i.e., its distribution is continuous, can
-be approximated as a continuous variable. Things like latency, which
-have atoms in the measurements, do not have continuous distribution
-throughout.</p>
-<blockquote>
-<p>A note on the word <em>distribution</em> here. In this section it is
-being used loosely — the intuitive picture of how probability is spread
-over the values of a measured quantity. That “measured quantity” is
-already a function of the outcome, <span class="math inline">\(\Omega
-\to \mathbb R\)</span>; we simply haven’t named it yet. Once we define
-the random variable below, “distribution” gets a precise meaning as the
-<strong>pushforward</strong> of <span class="math inline">\(P\)</span>
-onto the real line, and the continuous / discrete / mixed classification
-in the table below becomes a statement about that pushforward.</p>
-</blockquote>
-<p>Lets take some examples to see whether they can be deemed as
-continuous, discrete, or mixed.</p>
-<table>
-<colgroup>
-<col style="width: 15%" />
-<col style="width: 15%" />
-<col style="width: 28%" />
-<col style="width: 25%" />
-<col style="width: 15%" />
-</colgroup>
-<thead>
-<tr>
-<th>Experiment</th>
-<th>Quantity</th>
-<th>Measurement</th>
-<th>Distribution</th>
-<th>Variable</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>QPS</td>
-<td>Discrete</td>
-<td>Discrete</td>
-<td>Discrete</td>
-<td>Discrete</td>
-</tr>
-<tr>
-<td>Latency</td>
-<td>Continuous</td>
-<td>Discrete (h small)</td>
-<td>Mixed (timeouts)</td>
-<td>Mixed</td>
-</tr>
-<tr>
-<td>Rainfall</td>
-<td>Continuous</td>
-<td>Discrete (h small)</td>
-<td>Mixed (dry days)</td>
-<td>Mixed</td>
-</tr>
-<tr>
-<td>Height</td>
-<td>Continuous</td>
-<td>Discrete (h small)</td>
-<td>Continuous</td>
-<td>Continuous</td>
-</tr>
-</tbody>
-</table>
+<p>The first two questions were about the world and about the
+instrument. This one is about the probability measure itself. And since
+probability is assigned to events and never to outcomes, the real
+question is - <strong>which events carry probability?</strong>
+Concretely: can a singleton event carry any at all, or do I need an
+event with some width to it?</p>
+<ul>
+<li><strong>Discrete</strong>: singleton events carry positive
+probability. The event “exactly 23 requests arrived in this window” has
+a real chunk of probability sitting on it. QPS is inherently discrete,
+so probability piles up on the integers with nothing in between.</li>
+<li><strong>Continuous</strong>: every singleton event has probability
+<span class="math inline">\(0\)</span>, and only events with positive
+width carry any mass. This is the situation from <em>Impossible and Zero
+Probability</em> above - measuring a latency of exactly 2.384 seconds is
+entirely possible, but that singleton event still measures <span
+class="math inline">\(0\)</span>. Height is like this; the measurement
+chunkiness is negligible and no single value’s probability
+dominates.</li>
+<li><strong>Mixed</strong>: mostly the continuous story, but a handful
+of singleton events do carry positive mass. Recorded latency is this -
+the event “the request timed out” is the singleton <span
+class="math inline">\(\{c\}\)</span>, and it carries genuinely positive
+probability because every timed-out request records exactly <span
+class="math inline">\(c\)</span>.</li>
+</ul>
 <h2 id="random-variable">Random Variable</h2>
+<p>Lets say that the User IDs in our telemetry is an autoincrement style
+integer, i.e., each new user is a given an integer ID that is 1 more
+than the last user. We want to store our telemetry partitioned by User
+ID</p>
+<p><span class="math display">\[R(\omega) = \left\lfloor \frac{\omega -
+1}{7} \right\rfloor \qquad S(\omega) = (\omega - 1) \bmod 7\]</span></p>
+<p>And that interpretation has mathematical teeth. Your two die event
+spaces aren’t just differently-sized — they permit different random
+variables:</p>
+<ul>
+<li><span class="math inline">\(\mathscr F_1 =\)</span> powerset: <span
+class="math inline">\(X(\omega) = \omega\)</span> is a random variable,
+since <span class="math inline">\(X^{-1}({3}) = {3} \in \mathscr
+F_1\)</span>.</li>
+<li><span class="math inline">\(\mathscr F_2 = {\emptyset, E, O,
+\Omega}\)</span>: <span class="math inline">\(X(\omega) =
+\omega\)</span> is not a random variable, since <span
+class="math inline">\({3} \notin \mathscr F_2\)</span>. The only
+functions that survive are ones constant on <span
+class="math inline">\(E\)</span> and constant on <span
+class="math inline">\(O\)</span> — i.e. functions that can see parity
+and nothing finer.</li>
+<li></li>
+</ul>
 <p>Consider the two-coin-flip experiment, I can define a random variable
 that counts the number of heads in the outcome -</p>
 <table>
@@ -829,122 +803,75 @@ group outcomes into events. E.g., if my random variable is the number of
 heads in the coin toss experiment, <span class="math inline">\(P(X =
 1)\)</span> is shortcut for saying <span
 class="math inline">\(P(\{\omega: X(\omega) = 1\})\)</span>, which is
-nothing but <span class="math inline">\(P(\{HT, TH\})\)</span>. But
-beyond this, it labels those groups with real numbers in a way that lets
-me do arithmetic and ordering on them (the role that gives me
+nothing but <span class="math inline">\(P(\{HT, TH\})\)</span>. For
+discrete variables the probability <span class="math inline">\(P(X =
+x)\)</span> is the same as <span class="math inline">\(P(X(\omega) =
+x)\)</span>, which in turn is shortform for <span
+class="math inline">\(P(\{\omega: X(\omega) = x\})\)</span> i.e., the
+probability of an event where the outcome will measure exactly <span
+class="math inline">\(x\)</span>. This can refer to a single outcome or
+an event that comprises of multiple outcomes, all having the same value.
+E.g., if I want to represent the probability of whether the die roll is
+even or not, the event is the set of outcomes <span
+class="math inline">\(\{2, 4, 6\}\)</span> and I’d write it as <span
+class="math inline">\(P(X = 2 \;or\; 4 \;or\; 6)\)</span>. For
+continuous variables we measure probability of intervals instead, and
+when we say <span class="math inline">\(P(x_1 &lt; X &lt; x_2)\)</span>
+what we mean is <span class="math inline">\(P(\{\omega: x_1 &lt;
+X(\omega) &lt; x_2\})\)</span>.</p>
+<p>But beyond this, it labels those groups with real numbers in a way
+that lets me do arithmetic and ordering on them (the role that gives me
 expectation, variance, quantiles).</p>
-<h4 id="qps">QPS</h4>
-<p>Lets define a random variable <span class="math inline">\(X\)</span>
-that measures the number of requests in a 1-second window. If my sample
-space is the set of integers between <span
-class="math inline">\(0\)</span> and <span
-class="math inline">\(N\)</span>, then <span
-class="math inline">\(X\)</span> is simply an identity function. Now,
-lets say I define two other random variables - <span
-class="math inline">\(Y\)</span> and <span
-class="math inline">\(Z\)</span>, where <span
-class="math inline">\(Y\)</span> is the number of distinct client IPs,
-and <span class="math inline">\(Z\)</span> is the number of bytes served
-by the server. I’ll now need the table-based sample space and the random
-variables can be defined as:</p>
-<p><span class="math display">\[
-X(\omega) = nrows(\omega) \\
-Y(\omega) = distinct(\omega::ClientIP) \\
-Z(\omega) = sum(\omega::Bytes)
-\]</span></p>
-<p>Now if I want to measure the “burstiness” of the arrival times, I can
-amend my sample space to contain the arrival timestamp.</p>
-<p>Random variables on the same sample space can have joint
-distributions, e.g., I can model the total number of requests against
-the number of sessions (a session being all the requests from a single
-IP). Since distinct IPs can’t exceed the number of rows, <span
-class="math inline">\(Y \le X\)</span> always, and <span
-class="math inline">\(Y = 0\)</span> exactly when <span
-class="math inline">\(X = 0\)</span>, so the joint distribution lives on
-<span class="math inline">\(\{(x,y): 0 \le y \le x\}\)</span>, not on
-the strict product set.</p>
-<h4 id="latency-1">Latency</h4>
-<p>If the sample space is a range of real numbers <span
-class="math inline">\(\Omega = [l, c]\)</span> or <span
-class="math inline">\(\Omega = [l, \infty]\)</span>, etc. then the
-random variable <span class="math inline">\(T\)</span> can be the
-identity function <span class="math inline">\(T(\omega) =
-\omega\)</span>. However, the support of <span
-class="math inline">\(T\)</span> will have some interesting
-characteristics because of the atom at <span
-class="math inline">\(c\)</span>.</p>
-<p>Here is the distinction it pays to be careful about. The true latency
-is a continuous quantity that could, in principle, exceed <span
-class="math inline">\(c\)</span>. My measuring apparatus does not record
-that true value; it records <span class="math inline">\(\min(T,
-c)\)</span> — every request still running at the timeout is stamped with
-exactly <span class="math inline">\(c\)</span>. This clipping is called
-<strong>censoring</strong> (specifically
-<strong>right-censoring</strong>). The standard analogy is a study of
-light-bulb lifetimes: I watch them for a year, and some bulbs are still
-burning at the end. Recording those as “lasted 365 days” is false — they
-lasted longer — and it drags the estimated mean lifetime downwards.
-Because <em>every</em> timed-out request records the identical value
-<span class="math inline">\(c\)</span>, that single value carries real
-probability mass, maybe <span class="math inline">\(1\%\)</span>, not a
-vanishing amount.</p>
-<p>So the atom at <span class="math inline">\(c\)</span> is a property
-of the <strong>recorded</strong> variable <span
-class="math inline">\(\min(T, c)\)</span>, produced by censoring — it is
-<em>not</em> a claim that the true latency has a point mass at <span
-class="math inline">\(c\)</span>. (Contrast a genuine, intrinsic atom: a
-load balancer that deliberately returns a canned response at exactly
-<span class="math inline">\(c\)</span> for some fraction of requests.
-That would put real mass at <span class="math inline">\(c\)</span> in
-the latent quantity itself. Same-looking spike, different mechanism, and
-the difference matters when you model it.)</p>
-<p>The recorded variable therefore has two components — a continuous
-part over <span class="math inline">\([l, c)\)</span> and a discrete
-part consisting of the single value <span
-class="math inline">\(c\)</span>. Lets say that the timeout probability
-is <span class="math inline">\(p\)</span>, i.e., <span
-class="math inline">\(p = P(\min(T,c) = c)\)</span>, then the
-distribution of the recorded variable will be:</p>
+<p>Real life examples of random variables:</p>
 <ul>
-<li>it is drawn from the continuous interval <span
-class="math inline">\([l, c)\)</span> with probability <span
-class="math inline">\(1 - p\)</span></li>
-<li>it is equal to <span class="math inline">\(c\)</span> with
-probability <span class="math inline">\(p\)</span></li>
+<li><strong>QPS</strong>: Queries Per Second is itself an aggregate
+quantity so it cannot be a random variable. A suitable random variable
+will the number of requests in a 1-second interval, for which my sample
+space will have to be 1-second groups of trace logs. The random variable
+will be defined as <span class="math inline">\(X(\omega) =
+count(\omega)\)</span>. The minimum value outputted by <span
+class="math inline">\(X\)</span> will be <span
+class="math inline">\(0\)</span> and the maximum value can be some
+theoretical maximum depending on the network bandwidth, say <span
+class="math inline">\(N\)</span>. <span class="math inline">\(R_X = \{0,
+1, \dots, N\}\)</span>.</li>
+<li><strong>CTR</strong>: Again, the Click-Through-Rate is an aggregate
+quantity, a suitable random variable can be whether or not a session saw
+a click-through, for which the sample space will need to be partitioned
+by Session IDs. The random variable will take on the value <span
+class="math inline">\(1\)</span> if the session has at least one
+ad-click, or <span class="math inline">\(0\)</span> otherwise. Such
+binary variables are called indicator variables and are often denoted as
+<span class="math inline">\(\mathbb 1_{\Omega}(\omega)\)</span>, and its
+support is <span class="math inline">\(\{0, 1\}\)</span>.</li>
+<li><strong>Latency</strong>: This can be read out directly from each
+request log as the difference between the start and end timestamps.
+<span class="math inline">\(T(\omega) = end - begin\)</span>. Timestamps
+are nanosecond level floats, so <span class="math inline">\(T\)</span>
+will be continuous. The minimum value will be some theoretical value
+based on the minimum processing time for the smallest request - say
+<span class="math inline">\(l\)</span>. The maximum value is
+interesting. Because of the timeout, the measured maximum will be <span
+class="math inline">\(c\)</span>, the timeout value, but this does not
+mean that the actual latency was <span class="math inline">\(c\)</span>,
+it is possible that the request would have eventually completed, so the
+real latency is <span class="math inline">\(\ge c\)</span>. While all
+other latency values are continuous and will be spread out, the single
+value <span class="math inline">\(c\)</span> will appear a lot. This is
+why it is called an <strong>atom</strong>, and the act of clipping it at
+the atom value is called <strong>censoring</strong> or more precisely
+right-censoring in this case. <span class="math inline">\(T\)</span> is
+therefore neither continuous nor discrete. - it has two components; a
+continuous part over <span class="math inline">\([l, c)\)</span> and a
+discrete part consisting of a single value <span
+class="math inline">\(c\)</span>.</li>
 </ul>
-<p>If the sample space is richer:</p>
-<ul>
-<li><span class="math inline">\(\omega =\)</span> (connection state,
-server processing time, network delay), <span
-class="math inline">\(T(\omega) = sum(\omega)\)</span>.</li>
-<li><span class="math inline">\(\omega =\)</span> full trace of the
-request (full wireshark capture), <span class="math inline">\(T\)</span>
-will be a much more complex function.</li>
-</ul>
-<p>Now, if I want to denote the probability of the latency being between
-2 and 5 seconds, in shortform I can say - <span
-class="math inline">\(P(2 \le T \le 5)\)</span>, but this really means
-<span class="math inline">\(P(\{\omega: 2 \le T(\omega) \le
-5\})\)</span>.</p>
-<p>Discrete sample spaces usually have discrete support, and continuous
-sample spaces have continuous support, but it can also be mixed if there
-are atoms or the measurement is censored.</p>
-<p>For discrete variables the probability <span
-class="math inline">\(P(X = x)\)</span> is the same as <span
-class="math inline">\(P(X(\omega) = x)\)</span>, which in turn is
-shortform for <span class="math inline">\(P(\{\omega: X(\omega) =
-x\})\)</span> i.e., the probability of an event where the outcome will
-measure exactly <span class="math inline">\(x\)</span>. This can refer
-to a single outcome or an event that comprises of multiple outcomes, all
-having the same value. E.g., if I want to represent the probability of
-whether the die roll is even or not, the event is the set of outcomes
-<span class="math inline">\(\{2, 4, 6\}\)</span> and I’d write it as
-<span class="math inline">\(P(X = 2 \;or\; 4 \;or\; 6)\)</span>. For
-continuous variables the probability of a single outcome is always 0,
-but it does not mean that it is an impossibility. We measure probability
-of intervals instead, and when we say <span class="math inline">\(P(x_1
-&lt; X &lt; x_2)\)</span> what we mean is <span
-class="math inline">\(P(x_1 &lt; X(\omega) &lt; x_2)\)</span>.</p>
+<blockquote>
+<p>The standard analogy of atoms and censoring is a study of light-bulb
+lifetimes: I watch them for a year, and some bulbs are still burning at
+the end. Recording those as “lasted 365 days” is false — they lasted
+longer — and it drags the estimated mean lifetime downwards.</p>
+</blockquote>
 <h2 id="randomness">Randomness</h2>
 <p>We say “random variable”, but the variable itself is not random, it
 has a fixed definite measurement. So where does the randomness come
@@ -973,16 +900,15 @@ exactness relies on the continuity; for a discrete statistic it only
 holds approximately.)</p>
 <h2 id="distribution-of-a-random-variable">Distribution of a Random
 Variable</h2>
-<p>Once <span class="math inline">\(X: \Omega \to \mathbb R\)</span> is
-fixed, it carries the probability measure <span
+<p>==TODO== Once <span class="math inline">\(X: \Omega \to \mathbb
+R\)</span> is fixed, it carries the probability measure <span
 class="math inline">\(P\)</span> — which lives on the events of <span
 class="math inline">\(\Omega\)</span> — over to the real line. The
 probability that <span class="math inline">\(X\)</span> lands in some
 set <span class="math inline">\(B \subseteq \mathbb R\)</span> is just
 the probability of the outcomes that <span
 class="math inline">\(X\)</span> sends into <span
-class="math inline">\(B\)</span>:</p>
-<p><span class="math display">\[
+class="math inline">\(B\)</span>: <span class="math display">\[
 P_X(B) = P(\{\omega: X(\omega) \in B\}) = P(X^{-1}(B))
 \]</span></p>
 <p>This new measure <span class="math inline">\(P_X = P \circ
@@ -1003,6 +929,56 @@ point masses for a discrete law, a density for a continuous one, and —
 for a mixed law like recorded latency — a bit of each. That last case is
 exactly why the CDF, which always exists, turns out to be the
 description worth reaching for first.</p>
+<p>Lets take some examples to see whether they can be deemed as
+continuous, discrete, or mixed.</p>
+<table>
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 15%" />
+<col style="width: 28%" />
+<col style="width: 25%" />
+<col style="width: 15%" />
+</colgroup>
+<thead>
+<tr>
+<th>Experiment</th>
+<th>Quantity</th>
+<th>Measurement</th>
+<th>Distribution</th>
+<th>Variable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>QPS</td>
+<td>Discrete</td>
+<td>Discrete</td>
+<td>Discrete</td>
+<td>Discrete</td>
+</tr>
+<tr>
+<td>Latency</td>
+<td>Continuous</td>
+<td>Discrete (h small)</td>
+<td>Mixed (timeouts)</td>
+<td>Mixed</td>
+</tr>
+<tr>
+<td>Rainfall</td>
+<td>Continuous</td>
+<td>Discrete (h small)</td>
+<td>Mixed (dry days)</td>
+<td>Mixed</td>
+</tr>
+<tr>
+<td>Height</td>
+<td>Continuous</td>
+<td>Discrete (h small)</td>
+<td>Continuous</td>
+<td>Continuous</td>
+</tr>
+</tbody>
+</table>
 <h2 id="probability-mass-function">Probability Mass Function</h2>
 <p>For discrete probability distributions, each realization in the
 support of the random variable is assigned its own positive probability.
