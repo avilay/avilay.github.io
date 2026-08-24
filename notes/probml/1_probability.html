@@ -342,10 +342,11 @@ class="math inline">\(\Omega\)</span> and each outcome within it by
 <span class="math inline">\(\omega\)</span>. <span
 class="math inline">\(\Omega\)</span> can only be constructed out of
 <em>mutually exclusive</em> outcomes, i.e., only one of the outcomes can
-actually occur; and the outcomes have to be <em>exhaustive</em>, i.e.,
-exactly one of the outcomes must occur. When we learn that a specific
-outcome <span class="math inline">\(\bar \omega\)</span> has occurred,
-it is called the <em>realized outcome</em>.</p>
+actually occur; and the outcomes have to be <em>exhaustive</em>. Taken
+together this means exactly one of the outcomes must occur. When we
+learn that a specific outcome <span class="math inline">\(\bar
+\omega\)</span> has occurred, it is called the <em>realized
+outcome</em>.</p>
 <p>In both the above examples, the sample space has a finite number of
 elements. Let’s take some examples where this is not the case.</p>
 <p>Consider a dart board. I am interested in figuring out where my dart
@@ -384,7 +385,7 @@ class="math inline">\(\frac{1}{2}\)</span> seconds, before making the
 second attempt it waits <span class="math inline">\(\frac{1}{4}\)</span>
 seconds, before the third it waits <span
 class="math inline">\(\frac{1}{8}\)</span> seconds and so on. The set of
-all possible wait times is <span class="math inline">\(\{1, \frac{1}{2},
+all possible wait times is <span class="math inline">\(\{\frac{1}{2},
 \frac{1}{4}, \frac{1}{8}, \dots\}\)</span>. As before I can give each
 attempt an integer ID. This makes it countable. Unlike the above case,
 the entire set fits inside <span class="math inline">\([0, 1]\)</span>
@@ -511,8 +512,12 @@ sized web page our web server serves.</li>
 \dots, 511\}\)</span></li>
 <li>User ID: UUID4 which can have <span
 class="math inline">\(2^{122}\)</span> distinct elements.</li>
+<li>Session ID: UUID4 which can have <span
+class="math inline">\(2^{122}\)</span> distinct elements.</li>
 <li>Trace ID: UUID4 which can have <span
 class="math inline">\(2^{122}\)</span> distinct elements.</li>
+<li>Next-Path: <span class="math inline">\(\{\)</span> millions of
+different strings <span class="math inline">\(\}\)</span></li>
 </ul>
 <p>Each outcome will be a table, with each row in the table being a
 structured trace log. The table will have at most <span
@@ -633,7 +638,7 @@ class="math inline">\(\mathscr F\)</span>.</li>
 <span class="math inline">\(\mathscr F\)</span>.</li>
 </ol>
 <p>We will end up with a valid event space that follows all three rules.
-Obviously no proper non-empty subset of the atoms will be in <span
+Obviously no proper non-empty subset of any atom will be in <span
 class="math inline">\(\mathscr F\)</span>.</p>
 <p>Sample spaces that are countable to begin with have singleton events
 that are also countable; and they are disjoint, thus can become atoms.
@@ -754,6 +759,7 @@ class="math inline">\(P\)</span> is said to have <strong>atomic</strong>
 distribution. But the basic idea is the same.</p>
 <p>In case of the local high school, we had a finite sample space, which
 gives us an event space composed of singleton events of individual
+students. Lets say we have <span class="math inline">\(1200\)</span>
 students. We can assign a uniform probability of <span
 class="math inline">\(1/1200\)</span> to each singleton event. The sum
 of the probabilities of all singleton events is <span
@@ -765,13 +771,14 @@ class="math inline">\(P(\{H\}) = \frac{1}{2}\)</span>, the second
 singleton <span class="math inline">\(P(\{TH\}) =
 \frac{1}{2^2}\)</span>, the third singleton <span
 class="math inline">\(P(\{TTH\}) = \frac{1}{2^3}\)</span>, and so on
-till infinity. We can verify that the probabilities over these countably
-infinite singletons sum up to <span class="math inline">\(\frac{1}{2} +
-\frac{1}{4} + \frac{1}{8} + \dots = \frac{\frac{1}{2}}{1 - \frac{1}{2}}
-= 1\)</span>. Again, by the law of additivity of probability, we now
-have the probability defined for all possible events in this event
-space. However, we cannot have uniform distribution here, because there
-is nothing to divide by.</p>
+till infinity. This means that <span
+class="math inline">\(P(\{TTT\dots\}) = 0\)</span>. We can verify that
+the probabilities over these countably infinite singletons sum up to
+<span class="math inline">\(\frac{1}{2} + \frac{1}{4} + \frac{1}{8} +
+\dots = \frac{\frac{1}{2}}{1 - \frac{1}{2}} = 1\)</span>. Again, by the
+law of additivity of probability, we now have the probability defined
+for all possible events in this event space. However, we cannot have
+uniform distribution here, because there is nothing to divide by.</p>
 <p>Our singleton assignments do not have to be so mathematically neat.
 In the operation-retry example, let’s say our policy is to have only
 three retries, after which we raise an error. In this case we can assign
@@ -834,10 +841,11 @@ over <span class="math inline">\(\Omega\)</span>.</p>
 <li><span class="math inline">\(f: \Omega \rightarrow [0,
 \infty)\)</span> the return value is not a probability</li>
 </ul>
-<p>The bridge is integration: <span class="math inline">\(\int_A
-f(\omega) d\omega\)</span> so <span class="math inline">\(f\)</span> is
-not a probability assignment, it can be interpreted as probability per
-unit area.</p>
+<p>The bridge is the integral: <span class="math inline">\(\int_A
+f(\omega) d\omega\)</span> which gives the probability of the event
+<span class="math inline">\(A \in \mathscr F\)</span>. <span
+class="math inline">\(f\)</span> is not a probability assignment, it can
+be interpreted as probability per unit area.</p>
 <table>
 <colgroup>
 <col style="width: 6%" />
@@ -878,5 +886,142 @@ uniform (nothing to divide by)</td>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p>[!TIP]</p>
+<p><strong>Impossible and Zero Probability</strong>: In discrete
+distributions, a probablity of <span class="math inline">\(0\)</span>
+means that the event is impossible; it can never occur. However, in
+continous distributions, <em>all</em> singletons have a probability of
+<span class="math inline">\(0\)</span>. Even if my dart landed at
+exactly <span class="math inline">\((1.832, 0.4768)\)</span>, the
+probability of that particular singleton <span
+class="math inline">\(P(\{(1.832, 0.4768)\}) = 0\)</span>. This does not
+mean this singleton can never happen, in fact it did just happen! The
+only mathematically impossible event is the <span
+class="math inline">\(\emptyset\)</span>. This is why for continuous
+distributions, we like to deal with shaded regions (areas), which may
+have non-zero positive probability. Of course, even regions can have
+<span class="math inline">\(0\)</span> probability. For example a 1-D
+line drawn on the board, which can still occur. But it is also possible
+for some regions with <span class="math inline">\(0\)</span> probability
+to be impossible, e.g., if we are measuring server latency, the interval
+<span class="math inline">\([-5, -3]\)</span> milliseconds has a
+probability of <span class="math inline">\(0\)</span> because latencies
+are strictly positive. Thus, in a continuous world, an impossible event
+always has <span class="math inline">\(0\)</span> probability, but an
+event with <span class="math inline">\(0\)</span> probability is not
+necessarily impossible!</p>
+</blockquote>
+<h2 id="probability-space">Probability Space</h2>
+<p>We now understand the three ingredients needed to build a
+<strong>probability space</strong>. It is the triple <span
+class="math inline">\((\Omega, \mathscr F, P)\)</span>. To recap: <span
+class="math inline">\(\Omega\)</span> describes what can happen, <span
+class="math inline">\(\mathscr F\)</span> describes the questions we are
+allowed to ask about what happened, and <span
+class="math inline">\(P\)</span> is how likely is it that each of those
+questions has “yes” as their answer. The probability space is the
+foundational sandbox where all of probability theory and statistics
+takes place.</p>
+<p>The most important takeaway is that <strong>this triple is not handed
+to us by nature</strong>. It is us - the engineer, the data scientist,
+the statistician - that has to design it. How we define <span
+class="math inline">\(\Omega\)</span>, how finely we slice <span
+class="math inline">\(\mathscr F\)</span>, and what shape of <span
+class="math inline">\(P\)</span> we assign depends entirely on what we
+are trying to find out.</p>
+<p>Let’s go back to our 1-second window of trace logs. Recall <span
+class="math inline">\(\Omega = \bigcup_{k=0}^N L^k\)</span>, where each
+outcome is a table of upto <span class="math inline">\(N\)</span>
+structured logs. Let’s say three different people now walk upto this
+same 1-second window of traffic with three different questions.</p>
+<h4 id="the-capacity-planner">The Capacity Planner</h4>
+<p>She only wants to know how many requests arrived. She does not care
+about latency, status codes, or who sent them. She can do the following
+two things:</p>
+<p>She can coarsen the sample space itself, throwing away everything
+except the row count, and work in <span class="math inline">\(\Omega_1 =
+\{0, 1, \dots, N\}\)</span>. The <span class="math inline">\(\mathscr
+F_1\)</span> is the powerset with singleton atoms <span
+class="math inline">\(\{1\}, \{2\}, \dots, \{N\}\)</span> and <span
+class="math inline">\(P_1\)</span> is a discrete distribution over these
+<span class="math inline">\(N+1\)</span> atoms, estimated from a few
+weeks of historical windows.</p>
+<p>Or, she can keep the full <span class="math inline">\(\Omega\)</span>
+and coarsen the <em>event space</em> instead by partitioning <span
+class="math inline">\(\Omega\)</span> into groups of 1-second windows
+having the same number of logs, i.e., one group will have all the
+1-second windows that have <span class="math inline">\(1000\)</span>
+logs, another one will have all the 1-second windows that have <span
+class="math inline">\(23\)</span> logs and so on. <span
+class="math inline">\(A_k\)</span> will be the partition that has
+1-second windows with <span class="math inline">\(k\)</span> logs. The
+event space will be a union over these atoms. Assign <span
+class="math inline">\(P(A_k)\)</span> based on some logic or
+another.</p>
+<p>Even though both these methods discard information, both will answer
+all request-count related questions identically. The information gets
+discarded at the sample space in the first method, and at the event
+space in the second method. This is the same thing we did with the dart
+board when we replaced the disk with the interval <span
+class="math inline">\([0, R]\)</span>.</p>
+<h4 id="the-sre-on-call">The SRE On Call</h4>
+<p>He only wants to know about timeouts. He keeps the full, rich <span
+class="math inline">\(\Omega\)</span> but builds a super simple event
+space with only two atoms:</p>
+<ul>
+<li><span class="math inline">\(D\)</span> = windows containing at least
+one request that timedout.</li>
+<li><span class="math inline">\(D^c\)</span> = windows where every
+request was within the timeout.</li>
+</ul>
+<p><span class="math inline">\(\mathscr F_2 = \{\emptyset, D, D^c,
+\Omega\}\)</span>, has four events, and <span
+class="math inline">\(P_2\)</span> is determined by a single number, the
+probability of seeing <span class="math inline">\(D\)</span>. We can pin
+that down to <span class="math inline">\(P_2(D) = 0.02\)</span>. Here an
+enormous sample space has a simple 4-element event space on top of it.
+<span class="math inline">\(\Omega\)</span> does not dictate how fine
+<span class="math inline">\(\mathscr F\)</span> has to be.</p>
+<h4 id="the-latency-analyst">The Latency Analyst</h4>
+<p>She wants the full picture. She keeps the full <span
+class="math inline">\(\Omega\)</span> and needs an event space fine
+enough to ask about individual durations, so she builds <span
+class="math inline">\(\mathscr F_3\)</span> the way we built the Borel
+event space on the dart board - start with every shadeable region of the
+timestamps and close it under the three rules, the resulting event space
+will contain every conceivable shape of timestamps along with the
+singletons. Now the “slowest request in this window finished between
+180ms and 220ms” is a legitimate event.</p>
+<p>Her <span class="math inline">\(P_3\)</span> has to be a mixed
+distribution. Every duration strictly below the timeout <span
+class="math inline">\(c\)</span> gets its probability from a density, so
+each individual latency value has probability <span
+class="math inline">\(0\)</span>. Every timed out request lands on <span
+class="math inline">\(c\)</span>, so <span
+class="math inline">\(P_3\)</span> will have to put a non-zero positive
+mass on that particular singleton.</p>
+<h4 id="the-takeaway">The Takeaway</h4>
+<p>For the same raw data of 1-second window of traffic logs, we worked
+with three different probability spaces. The question we wanted to ask
+of the data is what determined the design of the probability space. And
+every design choice came with a cost. The SRE’s <span
+class="math inline">\(\mathscr F_2\)</span> cannot tell him the median
+latency because that event does not exist in his event space. So <span
+class="math inline">\(P_2\)</span> has nothing to evaluate - the same
+way <span class="math inline">\(P(\{6\})\)</span> was undefined in our
+even-odd die-roll space. Likewise the capacity planner’s <span
+class="math inline">\(\Omega_1\)</span> has thrown away the timestamps
+entirely; no event space built on it can ever recover them.</p>
+<blockquote>
+<p>[!TIP]</p>
+<p>A rule of thumb: make <span class="math inline">\(\Omega\)</span>
+rich enough to hold everything you might eventually want to ask about,
+and make <span class="math inline">\(\mathscr F\)</span> only as fine as
+the questions you are actually asking today. Coarsening <span
+class="math inline">\(\mathscr F\)</span> is cheap and reversible.
+Coarsening <span class="math inline">\(\Omega\)</span> throws away
+information for good.</p>
+</blockquote>
 </body>
 </html>

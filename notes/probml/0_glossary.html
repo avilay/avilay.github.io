@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>0_glossary</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700,700italic&subset=latin,latin-ext">
+  <style>
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, "Segoe UI Emoji", "SF Pro", sans-serif;
+      color: rgb(51, 51, 51);
+      line-height: 1.6;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 30px;
+      padding-bottom: 100px;
+    }
+
+    @media only screen and (min-width: 1400px) {
+      body { max-width: 1024px; }
+    }
+    @media only screen and (min-width: 1800px) {
+      body { max-width: 1200px; }
+    }
+
+    a {
+      color: #4183C4;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      font-weight: bold;
+      line-height: 1.4;
+    }
+    h1 {
+      font-size: 2.25em;
+      line-height: 1.2;
+      border-bottom: 1px solid #eee;
+    }
+    h2 {
+      font-size: 1.75em;
+      line-height: 1.225;
+      border-bottom: 1px solid #eee;
+    }
+    h3 {
+      font-size: 1.5em;
+      line-height: 1.43;
+    }
+    h4 {
+      font-size: 1.25em;
+    }
+    h5 {
+      font-size: 1em;
+    }
+    h6 {
+      font-size: 1em;
+      color: #777;
+    }
+
+    p, blockquote, ul, ol, dl, table {
+      margin: 0.8em 0;
+    }
+    li > ol, li > ul {
+      margin: 0 0;
+    }
+
+    hr {
+      height: 2px;
+      padding: 0;
+      margin: 16px 0;
+      background-color: #e7e7e7;
+      border: 0 none;
+      overflow: hidden;
+      box-sizing: content-box;
+    }
+
+    ul, ol {
+      padding-left: 30px;
+    }
+    ul:first-child, ol:first-child {
+      margin-top: 0;
+    }
+    ul:last-child, ol:last-child {
+      margin-bottom: 0;
+    }
+
+    blockquote {
+      border-left: 4px solid #dfe2e5;
+      padding: 0 15px;
+      color: #777777;
+    }
+    blockquote blockquote {
+      padding-right: 0;
+    }
+
+    table {
+      border-collapse: collapse;
+      padding: 0;
+      word-break: normal;
+      width: 100%;
+    }
+    table tr {
+      border: 1px solid #dfe2e5;
+      margin: 0;
+      padding: 0;
+    }
+    table tr:nth-child(2n),
+    thead {
+      background-color: #f8f8f8;
+    }
+    table th {
+      font-weight: bold;
+      border: 1px solid #dfe2e5;
+      border-bottom: 0;
+      margin: 0;
+      padding: 6px 13px;
+    }
+    table td {
+      border: 1px solid #dfe2e5;
+      margin: 0;
+      padding: 6px 13px;
+    }
+
+    code, tt {
+      border: 1px solid #e7eaed;
+      background-color: #f3f4f4;
+      border-radius: 3px;
+      padding: 2px 4px;
+      font-size: 0.9em;
+    }
+
+    pre {
+      margin-top: 15px;
+      margin-bottom: 15px;
+      padding: 8px 12px 6px;
+      background-color: #f8f8f8;
+      border-radius: 3px;
+      overflow-x: auto;
+    }
+    pre code, pre tt {
+      border: 0;
+      background: none;
+      padding: 0;
+      font-size: 0.9em;
+    }
+
+    img {
+      max-width: 100%;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="glossary">Glossary</h1>
+<p><span class="math inline">\(P(X)\)</span> is the same as <span
+class="math inline">\(P_X\)</span>. Here <span
+class="math inline">\(P\)</span> is not a function even though it looks
+like it is a function of the random variable <span
+class="math inline">\(X\)</span>. <span
+class="math inline">\(P(X)\)</span> - the whole thing is a function that
+takes in Borel sets over the real line as input. This means that <span
+class="math inline">\(P(X)\)</span> and <span
+class="math inline">\(P(Y)\)</span> don’t refer to the “same” entity
+“<span class="math inline">\(P\)</span>”. The “<span
+class="math inline">\(P\)</span>” here is different from the <span
+class="math inline">\(P: \mathscr F \rightarrow [0, 1]\)</span> over
+events that we know and love. Here the two <span
+class="math inline">\(P\)</span>s refer to two different distributions
+on two different random variables. I am guessing this notation was
+adopted because it is easy to read conditional distributions as <span
+class="math inline">\(P(X, Y \mid Z)\)</span> instead of <span
+class="math inline">\(P_{X, Y \mid Z}\)</span>.</p>
+<p><span class="math inline">\(P(X = x)\)</span> same as <span
+class="math inline">\(P_X(\{x\})\)</span> or more pedantically <span
+class="math inline">\(P(\{\omega: X(\omega) = x\})\)</span>. Here the
+first and the last “<span class="math inline">\(P\)</span>” are the same
+<span class="math inline">\(P: \mathscr F \rightarrow [0, 1]\)</span>.
+Similarly <span class="math inline">\(P(x_0 \le X \le x_1)\)</span> is
+the same as <span class="math inline">\(P_X([x_0, x_1])\)</span> or more
+pedantically <span class="math inline">\(P(\{\omega: x_0 \le X(\omega)
+\le x_1\})\)</span>.</p>
+<p><span class="math inline">\(P(X, Y)\)</span> is the same as <span
+class="math inline">\(P_{X, Y}\)</span>. <span class="math inline">\(P(X
+= x, Y = y)\)</span> is the same as <span class="math inline">\(P_{X,
+Y}(\{(x, y)\})\)</span> which is the same as <span
+class="math inline">\(P(\{\omega: X(\omega) = x, Y(\omega) =
+y\})\)</span>.</p>
+<p><span class="math inline">\(p_X\)</span> is the p.m.f of the random
+variable <span class="math inline">\(X\)</span>. <span
+class="math inline">\(p_x(x)\)</span> is used to refer to the output of
+the p.m.f for a specific value <span class="math inline">\(x\)</span>.
+Some ML books will use <span class="math inline">\(p(x)\)</span> to
+denote the p.m.f over the random variable <span
+class="math inline">\(X\)</span>. The convention is that the letter used
+inside the parens is the lowercase of the random variable which is the
+uppercase. So <span class="math inline">\(p(t)\)</span> is used for
+<span class="math inline">\(p_T\)</span>. Here both the <span
+class="math inline">\(p\)</span>s mean different things. And <span
+class="math inline">\(p(x)\)</span> can mean the function or its output
+depending upon the context.</p>
+<p>The p.m.f <span class="math inline">\(p_x\)</span> and the
+distribution of <span class="math inline">\(X, P_X\)</span> are not the
+same even when <span class="math inline">\(X\)</span> is discrete. Their
+output is a probability, but their input is of different types - <span
+class="math inline">\(p_x\)</span> takes in real numbers, <span
+class="math inline">\(P_X\)</span> takes in Borel sets of real numbers.
+They both give the same output when we pass a singleton, i.e., <span
+class="math inline">\(p_X(x) = P_X(\{x\})\)</span>.</p>
+</body>
+</html>

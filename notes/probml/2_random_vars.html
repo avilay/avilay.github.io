@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.10.1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>2_random_vars</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700,700italic&subset=latin,latin-ext">
+  <style>
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, "Segoe UI Emoji", "SF Pro", sans-serif;
+      color: rgb(51, 51, 51);
+      line-height: 1.6;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 30px;
+      padding-bottom: 100px;
+    }
+
+    @media only screen and (min-width: 1400px) {
+      body { max-width: 1024px; }
+    }
+    @media only screen and (min-width: 1800px) {
+      body { max-width: 1200px; }
+    }
+
+    a {
+      color: #4183C4;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      font-weight: bold;
+      line-height: 1.4;
+    }
+    h1 {
+      font-size: 2.25em;
+      line-height: 1.2;
+      border-bottom: 1px solid #eee;
+    }
+    h2 {
+      font-size: 1.75em;
+      line-height: 1.225;
+      border-bottom: 1px solid #eee;
+    }
+    h3 {
+      font-size: 1.5em;
+      line-height: 1.43;
+    }
+    h4 {
+      font-size: 1.25em;
+    }
+    h5 {
+      font-size: 1em;
+    }
+    h6 {
+      font-size: 1em;
+      color: #777;
+    }
+
+    p, blockquote, ul, ol, dl, table {
+      margin: 0.8em 0;
+    }
+    li > ol, li > ul {
+      margin: 0 0;
+    }
+
+    hr {
+      height: 2px;
+      padding: 0;
+      margin: 16px 0;
+      background-color: #e7e7e7;
+      border: 0 none;
+      overflow: hidden;
+      box-sizing: content-box;
+    }
+
+    ul, ol {
+      padding-left: 30px;
+    }
+    ul:first-child, ol:first-child {
+      margin-top: 0;
+    }
+    ul:last-child, ol:last-child {
+      margin-bottom: 0;
+    }
+
+    blockquote {
+      border-left: 4px solid #dfe2e5;
+      padding: 0 15px;
+      color: #777777;
+    }
+    blockquote blockquote {
+      padding-right: 0;
+    }
+
+    table {
+      border-collapse: collapse;
+      padding: 0;
+      word-break: normal;
+      width: 100%;
+    }
+    table tr {
+      border: 1px solid #dfe2e5;
+      margin: 0;
+      padding: 0;
+    }
+    table tr:nth-child(2n),
+    thead {
+      background-color: #f8f8f8;
+    }
+    table th {
+      font-weight: bold;
+      border: 1px solid #dfe2e5;
+      border-bottom: 0;
+      margin: 0;
+      padding: 6px 13px;
+    }
+    table td {
+      border: 1px solid #dfe2e5;
+      margin: 0;
+      padding: 6px 13px;
+    }
+
+    code, tt {
+      border: 1px solid #e7eaed;
+      background-color: #f3f4f4;
+      border-radius: 3px;
+      padding: 2px 4px;
+      font-size: 0.9em;
+    }
+
+    pre {
+      margin-top: 15px;
+      margin-bottom: 15px;
+      padding: 8px 12px 6px;
+      background-color: #f8f8f8;
+      border-radius: 3px;
+      overflow-x: auto;
+    }
+    pre code, pre tt {
+      border: 0;
+      background: none;
+      padding: 0;
+      font-size: 0.9em;
+    }
+
+    img {
+      max-width: 100%;
+    }
+  </style>
+  <script defer=""
+  src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<h1 id="random-variables">Random Variables</h1>
+<p>Let’s say our experiment is drawing a single card from a shuffled
+52-card deck. Our sample space Ω is the set of those 52 physical pieces
+of cardboard. An outcome ω is a specific card, like the <em>Jack of
+Hearts</em>. This outcome is clearly not a number—it is an object with a
+suit, a color, a rank, and a picture on it. Depending on what game we
+are playing, we will want to extract different numerical information
+from this exact same card. We do this by defining a function that
+assigns a real number to every card in the deck. This function is what
+we call a random variable, denoted by <span class="math inline">\(X:
+\Omega \rightarrow \mathbb R\)</span>. It is a <strong>total
+function</strong>, i.e., it is defined everywhere. If we are playing
+Blackjack, we choose a random variable X that maps the card to its game
+value:</p>
+<ul>
+<li><p><span class="math inline">\(X(\text{Jack of Hearts}) =
+10\)</span></p></li>
+<li><p><span class="math inline">\(X(\text{3 of Clubs}) =
+3\)</span></p></li>
+<li><p><span class="math inline">\(X(\text{Ace of Spades}) =
+11\)</span></p></li>
+</ul>
+<p>If we are playing a simple Red/Black guessing game, we might define a
+different random variable Y that acts as an indicator for whether the
+card is red:</p>
+<ul>
+<li><span class="math inline">\(Y(\text{Jack of Hearts}) =
+1\)</span></li>
+<li><span class="math inline">\(Y(\text{3 of Clubs}) = 0\)</span></li>
+<li><span class="math inline">\(Y(\text{Ace of Spades}) =
+0\)</span></li>
+</ul>
+<p>Or if we just care about counting the number of pips (the small suit
+symbols) printed on the card, we could define Z:</p>
+<ul>
+<li><span class="math inline">\(Z(\text{Jack of Hearts}) = 0\)</span>
+(Face cards have no pips)</li>
+<li><span class="math inline">\(Z(\text{3 of Clubs}) = 3\)</span></li>
+<li><span class="math inline">\(Z(\text{Ace of Spades}) =
+1\)</span></li>
+</ul>
+<p>You get the idea. The random variable is not the card itself, nor is
+the variable “random” in how it behaves—it is a strictly deterministic
+function. The randomness comes entirely from which card you draw, and
+the random variable just rigidly translates that random physical outcome
+into a real number we can do math on. The value that the random variable
+function <span class="math inline">\(X\)</span> outputs is called its
+<strong>realization</strong>, often denoted by <span
+class="math inline">\(x\)</span>, i.e., <span
+class="math inline">\(X(\omega) = x\)</span>. The random variable is
+often a many-to-one function.</p>
+<blockquote>
+<p>[!IMPORTANT]</p>
+<p>One of the main purposes of a random variable is group outcomes into
+events. If <span class="math inline">\(X\)</span> is the Blackjack
+value, then <span class="math inline">\(X = 10\)</span> groups all four
+10s and all twelve face cards together into a single event.</p>
+</blockquote>
+<p>A text book example is often rolling a single die, then <span
+class="math inline">\(\Omega = \{1, 2, 3, 4, 5, 6\}\)</span>, and the
+random variable <span class="math inline">\(X\)</span> is defined as the
+number of the face-up side, i.e., <span class="math inline">\(X(\omega)
+= \omega\)</span>, i.e., it is the identity function.</p>
+<p>Just like for any other function, while the
+<strong>co-domain</strong> of any random variable is <span
+class="math inline">\(\mathbb R\)</span>, its <strong>range</strong> is
+the set of numbers that a specific <span
+class="math inline">\(X\)</span> actually outputs. Obviously this will
+be a subset of its co-domain. The range of a function is also referred
+to as its <strong>image</strong>.</p>
+<p>One of the main properties of <span class="math inline">\(X\)</span>
+is that it must be <strong>measurable</strong>. What this means is that
+any set of outcomes that <span class="math inline">\(X\)</span> groups
+together must be a valid event in my event space. This does not mean
+that <span class="math inline">\(X\)</span> has to cover each and every
+event, but whatever it does cover, has to be present in <span
+class="math inline">\(\mathscr F\)</span>. Moreover, <span
+class="math inline">\(X\)</span> has to be constant on every atom of
+<span class="math inline">\(\mathscr F\)</span>. Let’s see this with a
+toy mathematical example. <span class="math display">\[
+\Omega = \{ \omega_1, \omega_2, \omega_3 \} \\
+\mathscr F = \{ \{\omega_1\}, \{\omega_2\}, \{\omega_3\}, \{\omega_1,
+\omega_2\}, \{\omega_1, \omega_3\}, \{\omega_2, \omega_3\}, \Omega,
+\emptyset \} \\
+X(\omega_1) = X(\omega_2) = x \quad X(\omega_3) = y
+\]</span> This means that <span class="math inline">\(X = x\)</span>
+covers the event <span class="math inline">\(\{\omega_1,
+\omega_2\}\)</span>, <span class="math inline">\(X = y\)</span> covers
+the event <span class="math inline">\(\{\omega_3\}\)</span> both of
+which are valid events in <span class="math inline">\(\mathscr
+F\)</span>. In this setup <span class="math inline">\(X\)</span> does
+not cover events like <span class="math inline">\(\{\omega_2,
+\omega_3\}\)</span>, but that is fine. However, if we had defined our
+event space like this instead (verify that it meets all three rules of
+an event space): <span class="math display">\[
+\mathscr F = \{ \{\omega_2\}, \{\omega_1, \omega_3\}, \Omega, \emptyset
+\}
+\]</span> <span class="math inline">\(X = x\)</span> covers an event
+<span class="math inline">\(\{\omega_1, \omega_2\}\)</span> which does
+not exist in our event space, which makes it an invalid random variable.
+Look at it another way, with <span class="math inline">\(X(\omega_1) =
+x\)</span> and <span class="math inline">\(X(\omega_3) = y\)</span>,
+<span class="math inline">\(X\)</span> is trying to tell these two
+outcomes apart, but in the event space they are fused together in an
+atom, they are the smallest resolution at which the event space can
+distinguish outcomes, a random variable cannot split them. A valid
+random variable has to be constant on every atom, so something like
+<span class="math inline">\(X(\omega_2) = x \quad X(\omega_1) =
+X(\omega_3) = y\)</span> is valid.</p>
+<p>In the last module we took our trace logs and created a sample space
+that was made of a collection of trace logs in 1-second windows. With
+that sample space, we can define a random variable <span
+class="math inline">\(X(\omega) = count(\omega)\)</span> which measures
+the number of requests in the 1-second window. The range or image of
+<span class="math inline">\(X\)</span> will be <span
+class="math inline">\(\{0, 1, 2, \dots, N\}\)</span>. With this same
+sample space, we can define another random variable <span
+class="math inline">\(Y(\omega) = distinct(sids)\)</span> which measures
+the number of unique sessions in the 1-second window. Its range too will
+be the same as <span class="math inline">\(X\)</span>.</p>
+<p>We can create another sample space where we collect all the logs
+belonging to a single session together. Now all logs in <span
+class="math inline">\(\omega\)</span> will have the same Session ID.
+With this we can define a random variable that measures the
+click-through, where it takes value <span
+class="math inline">\(1\)</span> if there is a Next-Path that is a click
+event in the session, and <span class="math inline">\(0\)</span> if
+there isn’t. This is denoted with an indicator variable <span
+class="math inline">\(\mathbb 1_{click}(\omega)\)</span>. Its range is
+<span class="math inline">\(\{0, 1\}\)</span>.</p>
+<p>We can also create a sample space made of individual trace logs. With
+this we can define a random variable that measures latency <span
+class="math inline">\(T(\omega) = e - s\)</span>. The minimum value will
+be some theoretical value based on the minimum processing time for the
+smallest request - say <span class="math inline">\(l\)</span>. The
+maximum value is interesting. Because of the timeout, the measured
+maximum will be <span class="math inline">\(c\)</span>, the timeout
+value, but this does not mean that the actual latency was <span
+class="math inline">\(c\)</span>, it is possible that the request would
+have eventually completed, so the real latency is <span
+class="math inline">\(\ge c\)</span>. When we measure <span
+class="math inline">\(T\)</span>, we will see the exact value <span
+class="math inline">\(c\)</span> appear a bunch of times, other values
+will be more spread out. The value <span
+class="math inline">\(c\)</span> is called an <strong>atom</strong>, and
+the act of clipping it at the atom value is called
+<strong>censoring</strong> or more precisely right-censoring in this
+case. The range of <span class="math inline">\(T\)</span> will be <span
+class="math inline">\([l, c]\)</span>, but <span
+class="math inline">\(c\)</span> is special.</p>
+<blockquote>
+<p>[!CAUTION]</p>
+<p><strong>Two kinds of “Atoms”</strong>: Be careful not to confuse the
+two ways we use the word “atom”!</p>
+<ol type="1">
+<li>An atom in an <strong>event space</strong> <span
+class="math inline">\(\mathscr F\)</span> is an indivisible <em>set of
+outcomes</em> that the event space refuses to split apart.</li>
+<li>An atom of a <strong>random variable</strong> (like the timeout
+<span class="math inline">\(c\)</span>) is a single <em>numerical
+value</em> in its range that ends up absorbing a concentrated chunk of
+the total probability, while all the other values are completely spread
+out.</li>
+</ol>
+</blockquote>
+<p>The astute reader must have noticed that we changed the sample space
+three times here and it seems to contradict the takeway of the previous
+module which preached that we should build one rich <span
+class="math inline">\(\Omega\)</span> to avoid having to rebuild the
+entire probability space over and over again. A random variable is the
+mechanism that helps us keep the sample space unchanging. In the
+1-second window example, <span class="math inline">\(X\)</span> and
+<span class="math inline">\(Y\)</span> are both defined on the same
+1-second window sample space, making two different measurements from the
+same outcome. That is the normal case. A new question does not need a
+new <span class="math inline">\(\Omega\)</span>.</p>
+<p>The reason we ended up needing three different sample spaces is that
+we had three different ideas of what constituted a single outcome, i.e.,
+our <strong>unit of observation</strong> changed. Latency is a property
+of one request, but an outcome in the 1-second window space is a whole
+table of requests, so there is no single number <span
+class="math inline">\(e - s\)</span> to measure. We would have had to
+ask for max latency, or the mean, or the latency of the <span
+class="math inline">\(k\)</span>-th row - each a different random
+variable, and none of them “the latency”. Same for the click-through
+indicator: a click belongs in a session, and a session’s logs are spread
+across many 1-second windows. So these are not three views of one
+experiment, they are three completely different experiments, each with
+its own <span class="math inline">\((\Omega, \mathscr F, P)\)</span>.
+Within any one of them, we can define as many random variables as we
+like without touching <span class="math inline">\(\Omega\)</span>
+again.</p>
+<h2 id="randomness">Randomness</h2>
+<p>We say “random variable”, but the variable itself is not random, it
+has a fixed definite measurement. So where does the randomness come
+from? It can come from one or more of the following:</p>
+<ul>
+<li>Sampling: which unit was drawn? E.g., when picking a person from a
+population; their height is fixed, the randomness is entirely in the
+draw.</li>
+<li>Process stochasticity: The mechanism is itself random. E.g., arrival
+times, queueing delay.</li>
+<li>Measurement error: The measurement apparatus is itself noisy.</li>
+</ul>
+<p>A thermometer reading of a room is all three at once — which room,
+the actual fluctuating temperature, sensor noise — and modeling it well
+means deciding which dominates.</p>
+<p><strong>Statistics of a sample are themselves random
+variables.</strong> The sample mean <span
+class="math inline">\(\bar{X}\)</span>, an A/B test’s estimated
+treatment effect, a model’s held-out accuracy — each is a function of a
+random sample, so each has a distribution of its own, called its
+<strong>sampling distribution</strong>. (For instance, a <span
+class="math inline">\(p\)</span>-value computed from a continuous test
+statistic under a simple null is <span
+class="math inline">\(\text{Uniform}(0,1)\)</span> — though this
+exactness relies on the continuity; for a discrete statistic it only
+holds approximately.)</p>
+<h2 id="distribution-of-a-random-variable">Distribution of a Random
+Variable</h2>
+<p>So far in our discussions we have seen two functions: <span
+class="math display">\[
+P: \mathscr F \rightarrow [0, 1] \\
+X: \Omega \rightarrow \mathbb R
+\]</span> <span class="math inline">\(P\)</span> is a set function, its
+input is a set (event is a set of outcomes), and <span
+class="math inline">\(X\)</span> is single variable function whose input
+is a single outcome. Let us now define a third function that will give
+us the probability of seeing a set <span
+class="math inline">\(B\)</span> as the output of <span
+class="math inline">\(X\)</span>. <span class="math inline">\(B\)</span>
+can be a single point on the real line, a collection of single points on
+the real line, a single interval, or a collection of points and
+intervals, and anything betwixt and in between! <span
+class="math inline">\(B\)</span> is called a Borel set, the same Borel
+set that we encountered in the last module when building the event space
+for uncountable sample spaces. Except here it is 1-D on the real line.
+In fact, practically <em>any</em> set on the real line we can physically
+write down or describe is a Borel set. We can intuit that this third
+function depends on both <span class="math inline">\(P\)</span> and
+<span class="math inline">\(X\)</span>, so let us call it <span
+class="math inline">\(P_X\)</span>. It can be easily verified that <span
+class="math inline">\(P_X(B) = P(\{\omega: X(\omega) \in B\})\)</span>.
+The probability of seeing <span class="math inline">\(B\)</span> is the
+same as the probability of the event whose every outcome’s measurement
+falls in <span class="math inline">\(B\)</span>. In other words, the
+probability of that part of the domain of <span
+class="math inline">\(X\)</span> whose image is <span
+class="math inline">\(B\)</span>. This part of the domain is also called
+the <strong>pre-image</strong> of <span class="math inline">\(X\)</span>
+and is written as <span class="math inline">\(X^{-1}(B)\)</span>.</p>
+<blockquote>
+<p>[!WARNING]</p>
+<p>Don’t read <span class="math inline">\(X^{-1}\)</span> as the
+“inverse of <span class="math inline">\(X\)</span>”, <span
+class="math inline">\(X\)</span> does not have to be invertible for this
+to work. It simply means the pre-image.</p>
+</blockquote>
+<p>In a weird twist of notation, we suddenly see function composition
+being used here: <span class="math inline">\(P_X = P \circ
+X^{-1}\)</span>, in text books this is called the <em>pushforward of
+<span class="math inline">\(P\)</span> through <span
+class="math inline">\(X\)</span></em>. This new function is called the
+<strong>distribution</strong> or <strong>law</strong> of <span
+class="math inline">\(X\)</span>. Its range is the same as <span
+class="math inline">\(P\)</span>’s range, i.e., <span
+class="math inline">\([0, 1]\)</span>. Its domain is the monstrous set
+of all Borel sets on the real line, often denoted as <span
+class="math inline">\(\mathscr B(\mathbb R)\)</span>. <span
+class="math display">\[
+P_X: \mathscr B(\mathbb R) \rightarrow [0, 1] \\
+P_X(B) = P(\{\omega: X(\omega) \in B\}) = P(X^{-1}(B)) \\
+P_X = P \circ X^{-1}
+\]</span> All the things we learned about probability over events
+translate to probability over intervals on the real line. <span
+class="math inline">\(P_X\)</span> is a true probability measure, just
+like <span class="math inline">\(P\)</span> and follows the same three +
+one rules:</p>
+<ul>
+<li>Non-negativity: <span class="math inline">\(P_X(B) \ge 0\)</span>
+for any region(s) on the real line.</li>
+<li>Sure thing: <span class="math inline">\(P_X(\mathbb R) =
+1\)</span></li>
+<li>Sigma-additivity: <span class="math inline">\(P_X(B_1 \cup B_2 \cup
+\dots) = P_X(B_1) + P_X(B_2) + \dots\)</span> where <span
+class="math inline">\(B_i\)</span> are all disjoint.</li>
+<li>Corollary <span class="math inline">\(\Rightarrow 0 \le P_X(B) \le
+1\)</span></li>
+</ul>
+<p>The value of a singleton value <span class="math inline">\(x\)</span>
+is written as <span class="math inline">\(P_X(\{x\})\)</span> which is
+the same as <span class="math inline">\(P(\{\omega: X(\omega) =
+x\})\)</span>.</p>
+<p>Just like in <span class="math inline">\(P\)</span>, we have three
+types of distributions for <span class="math inline">\(P_X\)</span> as
+well:</p>
+<ul>
+<li><strong>Discrete</strong>: When <span
+class="math inline">\(P_X\)</span> puts a positive mass on a countable
+number of singletons all summing to <span
+class="math inline">\(1\)</span>. For <span
+class="math inline">\(P\)</span> a singleton event meant an event with a
+single outcome. Here a singleton means a set with a single exact value.
+Let’s say we have an <span class="math inline">\(X\)</span> that maps
+all of <span class="math inline">\(\Omega\)</span> to three distinct
+values - <span class="math inline">\(1\)</span>, <span
+class="math inline">\(2\)</span>, and <span
+class="math inline">\(3\)</span>, and it turns out that <span
+class="math inline">\(P_X(\{1\}) = \frac{1}{3}, P_X(\{2\}) =
+\frac{1}{3}, P_X(\{3\}) = \frac{1}{3}\)</span>. It does not matter
+whether <span class="math inline">\(\Omega\)</span> is countable or not,
+it does not matter if the event space <span
+class="math inline">\(\mathscr F\)</span> that <span
+class="math inline">\(P\)</span> is operating on has any singletons or
+not, it does not matter if <span class="math inline">\(P\)</span> itself
+is discrete or not, nor does it matter if <span
+class="math inline">\(X\)</span>’s image is countable or not. As long as
+we have some points in <span class="math inline">\(X\)</span>’s image
+for which <span class="math inline">\(P\)</span> and <span
+class="math inline">\(\mathscr F\)</span> work out to produce positive
+mass summing to <span class="math inline">\(1\)</span>, we can say that
+<span class="math inline">\(X\)</span> has a discrete distribution.</li>
+</ul>
+<blockquote>
+<p>[!IMPORTANT]</p>
+<p>We do not have anything analogous to the atomic distribution we saw
+in the last module where we could make <span
+class="math inline">\(\mathscr F\)</span> coarse, and fuse multiple
+outcomes into a single indivisible event. Here <span
+class="math inline">\(P_X\)</span>’s domain is <span
+class="math inline">\(\mathscr B(\mathbb R)\)</span> which cannot be
+coarse, it will always separate singletons. What we can do in with the
+atomic dart board example from the last module is define <span
+class="math inline">\(X\)</span> s.t <span class="math inline">\(X(L) =
+1, X(R) = 2, X(G) = 3\)</span> and turn <span
+class="math inline">\(P_X\)</span> into a discrete distribution.</p>
+</blockquote>
+<ul>
+<li><strong>Continuous</strong>: When <span
+class="math inline">\(P_X\)</span> puts <span
+class="math inline">\(0\)</span> mass on every singleton in <span
+class="math inline">\(X\)</span>’s image, and we are able to define a
+density function which outputs a positive number for some/every point in
+the image of <span class="math inline">\(X\)</span> (and <span
+class="math inline">\(0\)</span> for every real number that is outside
+<span class="math inline">\(X\)</span>’s image). Just like the density
+function of <span class="math inline">\(P\)</span>, the density function
+of <span class="math inline">\(P_X\)</span> can be integrated to give
+the value of <span class="math inline">\(P_X\)</span> for any Borel set
+on the real line. If we have latency that is uniformly distributed
+between 10ms and 20ms, then the density function <span
+class="math inline">\(f(x) = 0.1 \ \forall \ 10 \le x \le 20\)</span>
+and <span class="math inline">\(0\)</span> everywhere else.</li>
+<li><strong>Mixed</strong>: When we have countable points in <span
+class="math inline">\(X\)</span>’s image that do carry a positive mass,
+but not summing to <span class="math inline">\(1\)</span>, and for the
+rest of the image we use a density function. Here, the sum of the
+integral and the point masses must total to <span
+class="math inline">\(1\)</span>. In the latency example, <span
+class="math inline">\(P_X(\{c\}) = 0.01\)</span> (say), and <span
+class="math inline">\(f(x)\)</span> can be defined s.t <span
+class="math inline">\(\int_l^c f(x)\;dx = 0.99\)</span>.</li>
+</ul>
+<h2 id="quantity-and-measurement">Quantity and Measurement</h2>
+<p>Asking whether a quantity is continuous or discrete is an abstraction
+over three concrete questions:</p>
+<ul>
+<li>Is the quantity I am measuring truly continuous?</li>
+<li>How sensitive is my measurement apparatus?</li>
+<li>Is the distribution of my measurement continuous?</li>
+</ul>
+<h4 id="latent-quantity">Latent Quantity</h4>
+<p>Think of the random variable that gives us the height of an
+individual student, or a random variable that gives us the latency from
+a single trace log. The student can be <span
+class="math inline">\(5.6789&#39;\)</span> or <span
+class="math inline">\(6.118&#39;\)</span> or anything in between, the
+request can take <span class="math inline">\(0.1\)</span> seconds or
+<span class="math inline">\(0.10001\)</span> seconds or anything in
+between. There is no gap between the allowed values. This is what we
+mean by continuous. In both these cases, the quantity that we are
+measuring is truly continuous.</p>
+<h4 id="measurement-apparatus">Measurement Apparatus</h4>
+<p>The moment we measure something, we have to use some measuring
+instrument, and every instrument has a smallest step. A perfcounter only
+measures up to nanoseconds. A measuring tape only shows inches. Which
+means that even if the true height is smooth, our recorded number always
+lands on one of a finite list of values - <span
+class="math inline">\(71&quot;\)</span> or <span
+class="math inline">\(72&quot;\)</span>, never <span
+class="math inline">\(71.524&quot;\)</span>. Strictly speaking, measured
+data is always a bit chunky, never perfectly smooth. We usually pretend
+it’s continuous anyway, because the chunks are so tiny they don’t
+matter. This can be quantified, i.e., there is a mathematical way to
+answer whether or not the chunkiness is negligible.</p>
+<p>Let’s say the tiniest value my measurement apparatus can measure is
+<span class="math inline">\(h\)</span>, then according to <a
+href="https://en.wikipedia.org/wiki/Sheppard%27s_correction">Sheppard’s
+correction</a>, my variance will be affected as: <span
+class="math display">\[
+\sigma_{obs}^2 \approx \sigma_{act}^2 + \frac{h^2}{12}
+\]</span> My observed variance will be an overestimate over my actual
+variance. To figure out whether the chunkiness is negligible, I can
+compare <span class="math inline">\(h\)</span> with either <span
+class="math inline">\(\sigma\)</span>. Let’s say I am measuring heights
+of some population. The smallest length my scale can measure is <span
+class="math inline">\(1\)</span> mm, then <span class="math inline">\(h
+= 1\)</span>. And the standard deviation of heights is <span
+class="math inline">\(\sigma = 2.8&quot; \approx 70mm\)</span> (per
+National Health Survey), i.e., <span class="math inline">\(\sigma^2 =
+70\;mm * 70\;mm = 4900\;mm^2\)</span>, and <span
+class="math inline">\(\frac{h^2}{12} = \frac{1}{12} = 0.0833
+\;mm^2\)</span>. If we compare the two <span
+class="math inline">\(\frac{0.0833}{4900} \approx 0.000017 =
+0.0017\%\)</span>, unarguably tiny!</p>
+<p>On the other hand, typical latency dashboards like Grafana lump all
+requests into a few wide buckets of around 250 ms. It is almost as wide
+as the values that I care about. Here pretending that things are smooth
+and reading off a “precise” number off that bucket is clearly
+misleading.</p>
+<p>Sometimes, even if the chunkiness is not very small, we can still
+pretend that the measurements are smooth depending on the quantity we
+are interested in. If we are computing averages, chunkiness mostly
+washes out. But if I am calculating the 99 percentile of latency, where
+I only have a few data points to begin with, chunkiness can be a real
+problem.</p>
+<h4 id="distribution">Distribution</h4>
+<p>The first two questions were about the world and about the
+instrument. This one is about the probability measure itself. The main
+question to answer here is whether a singleton in <span
+class="math inline">\(X\)</span> can carry any probability at all, or do
+we need a range to get a positive probability, which of course depends
+on which events in <span class="math inline">\(X\)</span>’s pre-image
+carry probability. Let’s take some examples to see whether they can be
+deemed as continuous, discrete, or mixed.</p>
+<table>
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 14%" />
+<col style="width: 26%" />
+<col style="width: 23%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr>
+<th>Experiment</th>
+<th>Quantity</th>
+<th>Measurement</th>
+<th><span class="math inline">\(\mathbf P\)</span></th>
+<th><span class="math inline">\(\mathbf {P_X}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>QPS</td>
+<td>Discrete</td>
+<td>Discrete</td>
+<td>Discrete</td>
+<td>Discrete</td>
+</tr>
+<tr>
+<td>Latency</td>
+<td>Continuous</td>
+<td>Discrete (h small)</td>
+<td>Mixed (timeouts)</td>
+<td>Mixed</td>
+</tr>
+<tr>
+<td>Rainfall</td>
+<td>Continuous</td>
+<td>Discrete (h small)</td>
+<td>Mixed (dry days)</td>
+<td>Mixed</td>
+</tr>
+<tr>
+<td>Height</td>
+<td>Continuous</td>
+<td>Discrete (h small)</td>
+<td>Continuous</td>
+<td>Continuous</td>
+</tr>
+</tbody>
+</table>
+<h2 id="probability-functions">Probability Functions</h2>
+<p>There are three ways of describing <span
+class="math inline">\(P_X\)</span> depending on what <span
+class="math inline">\(P_X\)</span> looks like - point masses for a
+discrete law, a density for a continuous one, and a bit of each for
+mixed. In any case, CDF always exists and is usually the description we
+reach for first.</p>
+<h3 id="cumulative-distribution-function">Cumulative Distribution
+Function</h3>
+<p>The CDF can be used to describe any type of distribution - be it
+continuous, discrete, or mixed - because it accumulates all the
+probability at or below <span class="math inline">\(x\)</span>, and this
+is always a valid question to ask regardless of the distribution. It is
+defined as: <span class="math display">\[
+F(x) = P(X \le x) \equiv P_X\big((-\infty, x]\big)
+\]</span> It has three properties:</p>
+<ul>
+<li><span class="math inline">\(F\)</span> is non-decreasing</li>
+<li><span class="math inline">\(F(-\infty) = 0 \quad F(\infty) =
+1\)</span></li>
+<li><span class="math inline">\(F\)</span> is right-continuous</li>
+</ul>
+<p>We can figure out the distribution of <span
+class="math inline">\(X\)</span> directly from the shape of <span
+class="math inline">\(F\)</span>.</p>
+<ul>
+<li><strong>Discrete</strong> (QPS): <span
+class="math inline">\(F\)</span> is a <strong>staircase</strong> — flat
+between the integers, with a jump at each value that has a positive
+probability. The height of the jump at <span
+class="math inline">\(x\)</span> is exactly the PMF, <span
+class="math inline">\(P(X = x)\)</span>. All the probability sits in the
+risers.</li>
+</ul>
+<figure>
+<img src="./imgs/qps-discrete-pmf-cdf.png" alt="qps-discrete-pmf-cdf" />
+<figcaption aria-hidden="true">qps-discrete-pmf-cdf</figcaption>
+</figure>
+<ul>
+<li><strong>Continuous</strong> (height): <span
+class="math inline">\(F\)</span> is a smooth, unbroken S-shaped climb
+from <span class="math inline">\(0\)</span> to <span
+class="math inline">\(1\)</span>, with no jumps. Here <span
+class="math inline">\(F\)</span> is differentiable and its slope
+<em>is</em> the density: <span class="math inline">\(F&#39;(x) =
+f(x)\)</span>, equivalently <span class="math inline">\(F(x) =
+\int_{-\infty}^{x} f(u)\,du\)</span>.</li>
+</ul>
+<figure>
+<img src="./imgs/height-continuous-pdf-cdf.png"
+alt="height-continuous-pdf-cdf" />
+<figcaption aria-hidden="true">height-continuous-pdf-cdf</figcaption>
+</figure>
+<ul>
+<li><strong>Mixed</strong> (recorded latency): <span
+class="math inline">\(F\)</span> climbs smoothly over <span
+class="math inline">\([l, c)\)</span> — the continuous part — and then,
+at the timeout <span class="math inline">\(c\)</span>, takes a single
+<strong>jump of height <span class="math inline">\(p\)</span></strong>,
+the atom. The jump is precisely the recorded probability of a timeout.
+This is the picture the PMF and PDF could each only tell half of: the
+smooth stretch is PDF-like, the jump is PMF-like, and the CDF holds both
+in one graph.</li>
+</ul>
+<figure>
+<img src="./imgs/latency-mixed-density-cdf.png"
+alt="Recorded latency" />
+<figcaption aria-hidden="true">Recorded latency</figcaption>
+</figure>
+<h3 id="probability-mass-function">Probability Mass Function</h3>
+<p>This is the simplest and the most intuitive way to describe <span
+class="math inline">\(P_X\)</span>. It is used to represent discrete
+distributions which are:</p>
+<ul>
+<li>Regardless of whether the image of <span
+class="math inline">\(X\)</span> is countable or uncountable, its <span
+class="math inline">\(supp(X)\)</span> is countable.</li>
+<li>All the probability masses in <span
+class="math inline">\(supp(X)\)</span> sum up to <span
+class="math inline">\(1\)</span>.</li>
+</ul>
+<p>It can be represented as a table:</p>
+<table>
+<thead>
+<tr>
+<th>Realization</th>
+<th><span class="math inline">\(\mathbf {P_X}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math inline">\(x_1\)</span></td>
+<td><span class="math inline">\(p_1\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(x_2\)</span></td>
+<td><span class="math inline">\(p_2\)</span></td>
+</tr>
+<tr>
+<td><span class="math inline">\(\dots\)</span></td>
+<td><span class="math inline">\(\dots\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>It is of course possible for <span class="math inline">\(p_i =
+p_j\)</span>, there is nothing that says the probabilities have to be
+distinct. If it is possible to model the probabilities as a function,
+i.e., <span class="math inline">\(p_X(x) \equiv P(X = x) \equiv
+P_X(\{x\})\)</span>, then <span class="math inline">\(p_X(x)\)</span> is
+called the probability mass function. It is worth repeating that the
+realization <span class="math inline">\(x\)</span> can be the output of
+multiple outcomes, and <span class="math inline">\(p_X(x)\)</span> is
+the probability of the event consisting of all these outcomes, i.e.,
+probability that any one of the outcomes happens. Because <span
+class="math inline">\(P_X\)</span> and <span
+class="math inline">\(p_x\)</span> are both functions that output
+probability, it is easy to conflate the two. <span
+class="math inline">\(p_X\)</span> acts on single real numbers, whereas
+<span class="math inline">\(P_X\)</span> acts on Borel sets made of real
+numbers. They are not the same. <span
+class="math inline">\(p_X(x)\)</span> is defined as the value of <span
+class="math inline">\(P_X\)</span> acting on a singleton <span
+class="math inline">\(P_X(\{x\})\)</span>, which is to say that they
+give the same output when we pass a singleton set <span
+class="math inline">\(\{x\}\)</span> to <span
+class="math inline">\(P_X\)</span>.</p>
+<h3 id="probability-density-function">Probability Density Function</h3>
+<p>A density function is used to represent continuous distributions.
+Probability density function is very much like physical density (mass
+per volume). Given a volume V, we can integrate the density from 0 to V
+to get the mass of that body. Given a range of values between <span
+class="math inline">\(x_1\)</span> and <span
+class="math inline">\(x_2\)</span>, we can integrate the probability
+density function to get the probability that the realization will lie
+between these two values. <span class="math display">\[
+M = \int_0^V \rho(v)dv
+\]</span></p>
+<p><span class="math display">\[
+P(x_1 &lt; x &lt; x_2) = \int_{x_1}^{x_2} f(x)dx
+\]</span></p>
+<p>As discussed earlier, the probability of any single realization <span
+class="math inline">\(x_0\)</span> is <span
+class="math inline">\(\int_{x_0}^{x_0} f(x)dx = 0\)</span>, but it does
+not mean that it is an impossibility.</p>
+<p>Density functions are themselves not probability, only their
+integrals are, which is why it is possible for density for some values
+to be greater than <span class="math inline">\(1\)</span>. Only the
+integral of the density needs to be bounded by <span
+class="math inline">\(1\)</span>. We can think of the density as the
+units of probability per unit of <span
+class="math inline">\(X\)</span>.</p>
+<h2 id="support">Support</h2>
+<p>Support of <span class="math inline">\(P_X\)</span> is often denoted
+as <span class="math inline">\(supp(X)\)</span>. Loosely speaking it is
+the set of values of <span class="math inline">\(X\)</span> which have
+<em>a positive probability</em>. In the die-roll example (yes, we are
+back to that to firmly understand this concept), <span
+class="math inline">\(P_X(\{1\}) = P_X(\{2\}) = \cdots = P_X(\{6\}) =
+\frac{1}{6}\)</span>. So the set <span class="math inline">\(\{1, 2,
+\dots, 6\}\)</span> can be considered as <span
+class="math inline">\(supp(X)\)</span>. But <span
+class="math inline">\(P_X(\{5, 6, 7, 8\}) = \frac{1}{3}\)</span> also
+has a positive probability, and so does <span
+class="math inline">\(P_X([0.5, 1.5]) = \frac{1}{6}\)</span>. Why don’t
+we consider these sets to be part of the support? Let’s refine our
+understanding a little bit - support is a <em>set of real numbers</em>,
+it cannot have other sets as elements, so in the die-roll case we only
+consider singletons that have positive mass as part of the support. But
+then why have all the <span class="math inline">\(6\)</span> numbers as
+part of the set? To answer this lets make our definition of support a
+little bit more precise - it is the set whose individual points have a
+positive probability and <em>whose probability</em> is <span
+class="math inline">\(1\)</span>, i.e., it includes all such points,
+i.e., <span class="math inline">\(P_X(supp(X)) = 1\)</span>. This
+explains why we need all <span class="math inline">\(6\)</span> numbers.
+But why don’t we have <span class="math inline">\(supp(X) = \{0, 1, 2,
+3, 4, 5, 6, 7, 8, 9, 10\}\)</span> ? This set also has a probability of
+<span class="math inline">\(1\)</span>. This brings us to yet another
+precision in our understanding, it must be the <em>smallest</em> such
+set. So far we have - <strong>support of <span
+class="math inline">\(X\)</span> is the set of all real numbers which
+have a positive probability.</strong> This covers all the requirements
+we have seen so far - it is a set of real numbers, the probability of
+the full set is <span class="math inline">\(1\)</span> because we are
+gathering all such real numbers, and it is the smallest set because we
+are excluding all points that do not have positive probability.</p>
+<p>For a discrete distribution with a finite number of points, it is
+clear to see that <span class="math inline">\(supp(X)\)</span> is the
+set of all points with positive mass. But this is true of countably
+infinite points as well. Consider the first-heads experiment, where
+<span class="math inline">\(X\)</span> can be defined as the number of
+coin-flips, its image is <span class="math inline">\(\{1, 2,
+\dots\}\)</span>, and the probability is <span
+class="math inline">\(P_X(\{x\}) = \frac{1}{2^x}\)</span>. This entire
+set of positive natural numbers is the support, even though it does not
+seem to have any end. I can pick any number from this set, however large
+it may be, and I’ll always be able to get a positive probability for it.
+In fact the support of a discrete distribution will always be
+countable.</p>
+<p>So far, so good, this draft definition works in the case of discrete
+distributions. What about continuous distributions? Let’s consider the
+following uniform distribution density function: <span
+class="math display">\[
+f_X(x) =
+\begin{cases}
+\frac{1}{10},  &amp; 10 \le x \le 20 \\
+0, &amp; \text{otherwise}
+\end{cases}
+\]</span> No single point has a positive probability! Lets amend our
+understanding one more time. It is not the values of <span
+class="math inline">\(X\)</span> that have a positive probability that
+are part of the set, it is actually those values of <span
+class="math inline">\(X\)</span> whose <em>tiny neighborhood</em>
+captures some positive probability. In this case a tiny neighborhood
+around <span class="math inline">\(10\)</span>, say <span
+class="math inline">\([9.99995, 10.00005]\)</span> captures a positive
+probability, but I can construct a tiny neighborhood around <span
+class="math inline">\(9.99995\)</span>, that does not have a positive
+probability, so we exclude that. The support is <span
+class="math inline">\([10, 20]\)</span>. What if the density was defined
+for the open interval as follows: <span class="math display">\[
+f_X(x) =
+\begin{cases}
+\frac{1}{10},  &amp; 10 &lt; x &lt; 20 \\
+0, &amp; \text{otherwise}
+\end{cases}
+\]</span> I can still construct an arbitrarily small neighborhood around
+<span class="math inline">\([9.99995, 10.00005]\)</span> which will
+capture a positive probability. The support is still <span
+class="math inline">\([10, 20]\)</span>. Our new and complete definition
+is - <strong>support of <span class="math inline">\(X\)</span> is the
+set of all real points where every arbitrarily tiny neighborhood around
+the point captures a positive probability.</strong></p>
+<p>For continuous distributions with density <span
+class="math inline">\(f_X\)</span>​, we can be tempted to think of the
+support as all points with positive density. But this is incorrect.
+Consider a function <span class="math inline">\(g\)</span> which is
+almost similar to <span class="math inline">\(f_X\)</span> : <span
+class="math display">\[
+g(x) =
+\begin{cases}
+\frac{1}{10},  &amp; 10 \le x &lt; 15 \\
+0, &amp; x = 15 \\
+\frac{1}{10}, &amp; 15 &lt; x \le 20 \\
+0, &amp; \text{otherwise}
+\end{cases}
+\]</span> The dip at <span class="math inline">\(x = 15\)</span> does
+not change the value of the integral for any interval. <span
+class="math inline">\(\int_5^{17} f_X(x)\;dx = \int_5^{17}
+g(x)\;dx\)</span>. In fact I could set this value to <span
+class="math inline">\(g(15) = 9999\)</span>, and it still wouldn’t
+change the integral. I could go so far as to change the value of the
+function at any number of isolated points, each with length <span
+class="math inline">\(0\)</span> and it will not change the value of the
+integral. Or looking at it another way, any tiny neighborhood around
+<span class="math inline">\(15\)</span> will always capture a positive
+probability, even though <span class="math inline">\(15\)</span> itself
+has <span class="math inline">\(0\)</span> density. The support is still
+<span class="math inline">\([10, 20]\)</span>.</p>
+<p>In Measure Theory, these <span class="math inline">\(f\)</span> and
+<span class="math inline">\(g\)</span> are considered the same function
+“defined up to null sets”. Null sets are sets of points that have zero
+length, area, or volume. Insetead of saying “all points with positive
+density”, if we take all such points and then “close” that set, we have
+our support, <span
+class="math inline">\(supp(X)=\overline{\{x:f_X(x)&gt;0\}}\)</span>. The
+overbar is the “closure” operation which produces a closed set.</p>
+<p>This idea of having points with <span
+class="math inline">\(0\)</span> probability being part of the support
+as long as any and every tiny neighborhood around it has positive mass
+applies to discrete distributions as well. Consider the server-retry
+scenario we saw in the last module. <span
+class="math inline">\(X\)</span> can output any one of <span
+class="math inline">\(\{\frac{1}{2}, \frac{1}{4}, \frac{1}{8},
+\dots\}\)</span> with each value being its own probability, i.e., <span
+class="math inline">\(P_X(\{x\}) = x\)</span>. Here the support is <span
+class="math inline">\(\{0, \frac{1}{2}, \frac{1}{4}, \cdots\}\)</span>.
+<span class="math inline">\(0\)</span> is part of the support, even
+though the probability mass at <span class="math inline">\(0\)</span> is
+<span class="math inline">\(0\)</span>. This is because every small
+neighborhood around <span class="math inline">\(0\)</span> will include
+some number <span class="math inline">\(\frac{1}{2^n}\)</span>, which
+has a positive mass.</p>
+<p>In Math and Stats text books we’ll come across this definition -
+<strong>support of <span class="math inline">\(X\)</span> is the
+smallest closed set of points - <span class="math inline">\(\mathbf
+S\)</span>, for which <span class="math inline">\(\mathbf {P_X(S) =
+1}\)</span></strong>. This is equivalent to the one we came up with. One
+last point on “smallest” and “closed”. Lets take our uniform
+distribution with support at <span class="math inline">\([10,
+20]\)</span>. I can pluck a singleton out of it, e.g., <span
+class="math inline">\([10, 20] \setminus \{15\}\)</span>, this is
+smaller than <span class="math inline">\([10, 20]\)</span> and its
+probability is still <span class="math inline">\(1\)</span>. In fact I
+can take any number of such singletons out, or I can take out all the
+rational numbers, or any other finite set, and end up with a smaller set
+whose integral is <span class="math inline">\(1\)</span>. Requiring
+closedness blocks exactly these kinds of deletions and makes “smallest”
+well-defined.</p>
+<h2 id="expectation-and-variance">Expectation and Variance</h2>
+<p><span class="math display">\[
+E[X] = \sum_x x \; p(x) \\
+E[X] = \int x \; f(x)dx
+\]</span></p>
+<p>Both the summation and integral are over <span
+class="math inline">\(supp(X)\)</span>, i.e., the range where
+probability exists.</p>
+<p>For the mixed case it would look something like - <span
+class="math display">\[
+E[T] = \int_l^c t\;f(t)dt + c \cdot P(T=c)
+\]</span></p>
+<p>Notice that this is exactly <span class="math inline">\(E[\min(T,
+c)]\)</span> — the expectation of the <strong>recorded</strong>
+(censored) variable, not of the true latency. Every timed-out request
+contributes <span class="math inline">\(c\)</span> rather than its true,
+larger value, so this mean is biased low — the same downward drag the
+light-bulb study warned about. Recovering <span
+class="math inline">\(E[T]\)</span> for the true latency needs a model
+that credits the fact that <span class="math inline">\(T &gt; c\)</span>
+on those requests; the censored sample does not hand it to you
+directly.</p>
+<p>Variance is the squared distance from the mean:</p>
+<p><span class="math display">\[
+\begin{align}
+Var[X] &amp;= E[(X - E[X])^2] \\
+&amp;= E[X^2] - (E[X])^2
+\end{align}
+\]</span></p>
+<p>And it is computed with either a summation or an integration
+depending on <span class="math inline">\(X\)</span>.</p>
+</body>
+</html>
